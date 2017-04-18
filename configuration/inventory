@@ -1,0 +1,14 @@
+# -*- mode: conf; -*-
+
+# There should be an entry in ~/.ssh/config that specifies the host monetdb01.
+# For example in my .ssh/config:
+
+# Host monetdb01
+#  Hostname localhost
+#  Port 2231
+#  IdentityFile ~/.ssh/id_rsa
+
+
+[monetdb]
+monetdb01
+# monetdb02
