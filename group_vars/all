@@ -1,0 +1,3 @@
+# -*- mode: yaml -*-
+local_download_cache: /tmp/download_cache
+monet_tarball_filename: MonetDB-rpms.tar.bz2

@@ -1,0 +1,10 @@
+- name: Create download cache
+  file:
+    name: "{{ local_download_cache }}"
+    state: directory
+    mode: 0755
+
+- name: Download MonetDB for Exanest
+  get_url:
+    url: https://www.monetdbsolutions.com/downloads/HTM/MonetDB-exanest-aarch64-rpms.tar.bz2
+    dest: "{{ local_download_cache }}/{{ monet_tarball_filename }}"

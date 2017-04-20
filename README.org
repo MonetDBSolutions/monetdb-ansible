@@ -22,6 +22,12 @@
   Specific assumptions are recorded in each role.
 
 ** Available roles
+*** Download cache
+    Make sure that files are downloaded in the host running ansible once, and
+    upload them from here to the nodes. Instead of downloading the MonetDB
+    tarball in every node, download it once at the localhost and upload it to
+    the node when provisioning.
+
 *** Exanest node
     This role prepares a server as an exanest node. Specifically it creates a
     user ~exanest~ and adds an ssh public key to the authorized key list of that

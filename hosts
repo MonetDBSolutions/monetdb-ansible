@@ -15,3 +15,5 @@ monetdb01
 monetdb01
 # monetdb02
 
+[download_cache]
+localhost

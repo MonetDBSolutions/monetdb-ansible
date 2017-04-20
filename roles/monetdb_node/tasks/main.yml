@@ -12,10 +12,13 @@
     state: directory
     mode: 0755
 
-- name: Download archive
-  get_url:
-    url: https://www.monetdbsolutions.com/downloads/HTM/MonetDB-exanest-aarch64-rpms.tar.bz2
-    dest: /home/exanest/MonetDB-rpms.tar.bz2
+- name: Upload RPMs
+  copy:
+    src: "{{ local_download_cache }}/{{ monet_tarball_filename }}"
+    dest: "/home/exanest/{{ monet_tarball_filename }}"
+    owner: exanest
+    group: exanest
+    mode: 0644
 
 # Normally we would do this with the unarchive module, but it seems to be broken
 # (April 2017). See for instance:
