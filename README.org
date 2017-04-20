@@ -1,0 +1,57 @@
+* Ansible for Exanest
+
+  This project is an attempt to facilitate the work on the Exanest project, by
+  providing an abstract, but executable, description for the provisioning of
+  nodes.
+
+  Early in the project we realized that exchanging KVM images with various
+  software (in our case MonetDB) pre-installed, is unpractical mainly because of
+  the size of these images. We decided to attempt to abstract this procedure and
+  provisioning software was a good fit for what we needed. So we chose to use
+  [[https://www.ansible.com/][Ansible]] to abstract and automate the procedure of installing software on
+  exanest nodes.
+
+  Ansible has a very definite advantage in the context of Exanest over other
+  automation software (Puppet, Chef, etc): It is agent-less and only needs a
+  working SSH connection.
+
+  In order to run this configuration you need the following:
+  - Have ansible installed on your computer
+  - Have a working SSH connection on the node(s) you want to configure.
+
+  Specific assumptions are recorded in each role.
+
+** Available roles
+*** Exanest node
+    This role prepares a server as an exanest node. Specifically it creates a
+    user ~exanest~ and adds an ssh public key to the authorized key list of that
+    user. The key should be placed at ~roles/exanest_node/files/public_key~.
+
+    Assumptions:
+    - The root password is ~centos~. You can change it in the file
+      ~roles/exanest_node/vars/main.yml~ (the value of ~ansible_ssh_pass~).
+
+*** Monetdb node
+    This role downloads and installs MonetDB. It depends on the role [[*Exanest node][Exanest
+    node]], i.e. it will run that role, before attempting to proceed.
+
+    Assumptions:
+    - The node is an AArch64 processor running CentOS. (The MonetDB version
+      installed is the precompiled MonetDB for CentOS AArch64).
+
+
+** Security notes
+   This project was created in order to facilitate the work in the Exanest
+   project. Every time there was a trade-off between convenience and security,
+   convenience was chosen. Be warned.
+
+   A (non complete) list of security concerns follows:
+
+   - Ansible is configured so as not to check node SSH keys
+   - The ~root~ password is explicitly recorded in the file
+     ~roles/exanest_node/vars/main.yml~
+   - The ~exanest~ user password is recorded in the file
+     ~roles/monetdb_node/vars/main.yml~
+   - The ~exanest~ user password is itself ~exanest~
+
+   All in all, this project is *not* secure.
