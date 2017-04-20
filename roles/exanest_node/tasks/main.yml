@@ -1,0 +1,17 @@
+---
+
+# This set of tasks prepares an exanest server. It assumes that the machine is
+# already running
+
+- name: Create user exanest
+  user:
+    name: exanest
+    groups: wheel
+    append: yes
+    password: "{{ password }}"
+
+- name: Add authorized ssh key
+  authorized_key:
+    user: exanest
+    state: present
+    key: "{{ lookup('file', './files/public_key') }}"

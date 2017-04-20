@@ -1,6 +1,6 @@
 # -*- mode: conf; -*-
 
-# There should be an entry in ~/.ssh/config that specifies the host monetdb01.
+# There should be an entry in ~/.ssh/config that defines the hosts monetdb*.
 # For example in my .ssh/config:
 
 # Host monetdb01
@@ -8,13 +8,10 @@
 #  Port 2231
 #  IdentityFile ~/.ssh/id_rsa
 
+[exanest]
+monetdb01
 
 [monetdb]
 monetdb01
 # monetdb02
 
-[monetdb:vars]
-ansible_connection=ssh
-ansible_ssh_user=root
-ansible_ssh_pass=centos
-ansible_become_pass=exanest

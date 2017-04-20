@@ -1,0 +1,9 @@
+ansible_become_pass: exanest
+monetdb_version: 11.25.16-20170414
+system_spec: el7.centos.aarch64
+packages:
+  - MonetDB-stream
+  - MonetDB
+  - MonetDB-client
+  - MonetDB5-server
+  - MonetDB-SQL-server5

@@ -1,0 +1,7 @@
+---
+# This playbook prepares an exanest server and installs monetdb on it
+
+- hosts: monetdb
+  remote_user: exanest
+  roles:
+    - monetdb_node
