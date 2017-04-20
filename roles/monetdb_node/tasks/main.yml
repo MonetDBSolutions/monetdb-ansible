@@ -6,6 +6,8 @@
 # It assumes that there is a user exanest capable of using sudo and that the
 # current user is able to ssh without a password.
 
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 - name: Create RPM directory
   file:
     path: /home/exanest/monetdb/rpms

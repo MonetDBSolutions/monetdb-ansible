@@ -1,3 +1,7 @@
+# Variables for the monetdb node role
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 ansible_become_pass: exanest
 monetdb_version: 11.25.16-20170414
 system_spec: el7.centos.aarch64

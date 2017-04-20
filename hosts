@@ -8,6 +8,8 @@
 #  Port 2231
 #  IdentityFile ~/.ssh/id_rsa
 
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 [exanest]
 monetdb01
 

@@ -3,6 +3,8 @@
 # This set of tasks prepares an exanest server. It assumes that the machine is
 # already running
 
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 - name: Create user exanest
   user:
     name: exanest

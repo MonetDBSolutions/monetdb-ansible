@@ -1,3 +1,8 @@
+# This set of tasks creates a directory locally and downloads any files that are
+# needed later.
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 - name: Create download cache
   file:
     name: "{{ local_download_cache }}"

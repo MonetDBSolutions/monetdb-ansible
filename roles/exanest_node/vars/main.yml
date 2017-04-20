@@ -1,3 +1,7 @@
+# Variables for the exanest node role
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 ansible_ssh_user: root
 ansible_ssh_pass: centos
 password: $6$lP8E9dJdEmT/BmFb$w0Ta1MdadpIfKYDsXYWvb0ZsbWfGPh9kNPmNrnIlbkf7KcThdDQ5cc6yDCjJXzxJW3UhMEhC7nH58NzWILJ3U/

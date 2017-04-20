@@ -1,3 +1,6 @@
 ---
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
 dependencies:
   - { role: exanest_node }

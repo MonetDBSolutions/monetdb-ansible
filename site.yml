@@ -1,5 +1,8 @@
 ---
+
 # This playbook prepares an exanest server and installs monetdb on it
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
 - hosts: download_cache
   roles:
