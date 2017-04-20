@@ -1,8 +1,8 @@
-* Ansible for Exanest
+* Provisioning MonetDB nodes with Ansible
 
-  This project is an attempt to facilitate the work on the Exanest project, by
-  providing an abstract, but executable, description for the provisioning of
-  nodes.
+  This repository started as an attempt to facilitate the work on the Exanest
+  project, by providing an abstract, but executable, description for the
+  provisioning of nodes.
 
   Early in the project we realized that exchanging KVM images with various
   software (in our case MonetDB) pre-installed, is unpractical mainly because of
