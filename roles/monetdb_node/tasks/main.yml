@@ -34,3 +34,19 @@
     name: "/home/exanest/monetdb/rpms/{{ item }}-{{ monetdb_version }}.{{ system_spec }}.rpm"
     state: present
   with_items: "{{ packages }}"
+  notify: restart monetdb daemon
+
+- name: Add user exanest to the monetdb group
+  become: yes
+  user:
+    name: exanest
+    groups: monetdb
+    append: yes
+
+- name: Upload dotmonetdb file
+  copy:
+    src: files/dotmonetdb
+    dest: /home/exanest/.monetdb
+    owner: exanest
+    group: exanest
+    mode: 0644

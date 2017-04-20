@@ -1,0 +1,3 @@
+---
+- name: restart monetdb daemon
+  service: name=monetdbd state=restarted
