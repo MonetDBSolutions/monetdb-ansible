@@ -3,4 +3,7 @@
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
 local_download_cache: /tmp/download_cache
-monet_tarball_filename: MonetDB-rpms.tar.bz2
+monetdb_version: 11.25.16-20170414
+system_spec: el7.centos.aarch64
+monet_tarball_prefix: MonetDB-exanest
+monet_tarball_filename: MonetDB-exanest.tar.bz2

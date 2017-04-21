@@ -8,11 +8,11 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-- name: Create RPM directory
-  file:
-    path: /home/exanest/monetdb/rpms
-    state: directory
-    mode: 0755
+# - name: Create RPM directory
+#   file:
+#     path: /home/exanest/monetdb/rpms
+#     state: directory
+#     mode: 0755
 
 - name: Upload RPMs
   copy:
@@ -26,7 +26,7 @@
 # (April 2017). See for instance:
 # https://github.com/ansible/ansible-modules-core/issues/3241#issuecomment-222268994
 - name: Unpack archive
-  command: tar -xvf /home/exanest/MonetDB-rpms.tar.bz2 -C /home/exanest/monetdb/rpms
+  command: "tar -xvf /home/exanest/{{ monet_tarball_filename }} -C /home/exanest"
   args:
     creates: /home/exanest/monetdb/rpms/*.rpm
 
