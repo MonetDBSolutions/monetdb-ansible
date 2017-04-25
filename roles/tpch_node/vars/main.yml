@@ -1,0 +1,14 @@
+---
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
+scale_factor: 0.1
+db_name: 0p1
+table_names:
+  - customer
+  - lineitem
+  - nation
+  - orders
+  - partsupp
+  - part
+  - region
+  - supplier
