@@ -45,6 +45,17 @@
     - The node is an AArch64 processor running CentOS. (The MonetDB version
       installed is the precompiled MonetDB for CentOS AArch64).
 
+*** TPC-H node
+    This role, continues from the Monetdb role. It compiles a generator for
+    TPC-H data, runs it, and loads the data in MonetDB. By default it will
+    generate scale factor 0.1 (100 MB), but this is configurable with the
+    variables ~scale_factor~ and ~db_name~. For example in order to generate and
+    load scale factor 1 you need to change both to the value ~1~.
+
+    The data is loaded in a database with name ~SF-{{ db_name }}~ (eg ~SF-1~).
+
+    Assumptions:
+    - MonetDB node has been prepared previously.
 
 ** Security notes
    This project was created in order to facilitate the work in the Exanest
