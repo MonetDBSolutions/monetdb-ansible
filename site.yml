@@ -12,3 +12,4 @@
   remote_user: exanest
   roles:
     - monetdb_node
+    - tpch_node

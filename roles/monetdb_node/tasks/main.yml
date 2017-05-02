@@ -8,15 +8,9 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-# - name: Create RPM directory
-#   file:
-#     path: /home/exanest/monetdb/rpms
-#     state: directory
-#     mode: 0755
-
 - name: Upload RPMs
   copy:
-    src: "{{ local_download_cache }}/{{ monet_tarball_filename }}"
+    src: "{{ local_download_cache }}/{{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2"
     dest: "/home/exanest/{{ monet_tarball_filename }}"
     owner: exanest
     group: exanest
@@ -36,7 +30,12 @@
     name: "/home/exanest/monetdb/rpms/{{ item }}-{{ monetdb_version }}.{{ system_spec }}.rpm"
     state: present
   with_items: "{{ packages }}"
-  notify: restart monetdb daemon
+  # notify: restart monetdb daemon
+
+- name: Start monetdb daemon
+  service:
+    name: monetdbd
+    state: started
 
 - name: Add user exanest to the monetdb group
   become: yes

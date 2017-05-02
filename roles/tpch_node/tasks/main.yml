@@ -1,0 +1,68 @@
+---
+
+# This set of tasks prepares TPC-H data for use with MonetDB
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
+- name: Compile TPC-H generator
+  command: make
+  args:
+    chdir: /home/exanest/monetdb/tpch_gen/dbgen
+    creates: /home/exanest/monetdb/tpch_gen/dbgen/dbgen
+
+- name: Run TPC-H generator
+  command: ./dbgen -vf -s {{ scale_factor }}
+  args:
+    chdir: /home/exanest/monetdb/tpch_gen/dbgen
+    creates: /home/exanest/monetdb/tpch_gen/dbgen/region.tbl
+
+- name: Create data directory
+  file:
+    path: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
+    state: directory
+
+- name: Move TPC-H data to data directory
+  copy:
+    src: /home/exanest/monetdb/tpch_gen/dbgen/{{ item }}.tbl
+    dest: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
+    remote_src: True
+  with_items: "{{ table_names }}"
+
+# - name: Change owner
+#   file:
+#     path: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
+#     group: monetdb
+#     recurse: yes
+
+# - name: Delete original files
+#   file:
+#     path: /home/exanest/monetdb/tpch_gen/dbgen/{{ item }}
+#     state: absent
+#   with_items: "{{ table_files }}"
+
+# - name: Load files in monetDB
+#   command: ./sf_build.sh SF-{{ db_name }}
+#   args:
+#     chdir: /home/exanest/monetdb/tpch_scripts
+
+- name: Stop database SF-{{ db_name }}
+  command: monetdb stop SF-{{ db_name }}
+  ignore_errors: yes
+
+- name: Destroy database SF-{{ db_name }}
+  command: monetdb destroy SF-{{ db_name }} -f
+  ignore_errors: yes
+
+- name: Create database SF-{{ db_name }}
+  command: monetdb create SF-{{ db_name }}
+
+- name: Release database SF-{{ db_name }}
+  command: monetdb release SF-{{ db_name }}
+
+- name: Create database schema
+  command: mclient -d SF-{{ db_name }} /home/exanest/monetdb/tpch_scripts/tpch_schema.sql
+
+- name: Load data in monetdb
+  command: ./sf_build.sh SF-{{ db_name }}
+  args:
+    chdir: /home/exanest/monetdb/tpch_scripts

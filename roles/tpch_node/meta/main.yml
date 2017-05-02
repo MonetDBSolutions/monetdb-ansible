@@ -1,0 +1,6 @@
+---
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
+# dependencies:
+#   - { role: monetdb_node }
