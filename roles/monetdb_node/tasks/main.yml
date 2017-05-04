@@ -32,10 +32,17 @@
   with_items: "{{ packages }}"
   # notify: restart monetdb daemon
 
+- name: Install sysstats
+  become: yes
+  yum:
+    name: sysstat
+    state: present
+
 - name: Start monetdb daemon
   service:
     name: monetdbd
     state: started
+    enabled: yes
 
 - name: Add user exanest to the monetdb group
   become: yes
