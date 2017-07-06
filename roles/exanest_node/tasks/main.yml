@@ -16,4 +16,7 @@
   authorized_key:
     user: exanest
     state: present
-    key: "{{ lookup('file', './files/public_key') }}"
+    key: "{{ lookup('file', item) }}"
+  with_items:
+    - ./files/public_key
+    - ~/.ssh/id_rsa.pub
