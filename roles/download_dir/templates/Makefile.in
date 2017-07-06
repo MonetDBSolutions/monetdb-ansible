@@ -1,0 +1,16 @@
+
+RSYNC=rsync -W
+RSYNC_LOCATION={{rsync_location}}
+
+default:
+
+kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
+
+# We only support rsync right now
+
+{{centos_img_file}}:
+	$(RSYNC) $(RSYNC_LOCATION)/$@ .
+
+{{qemu_efi_img_file}}:
+	$(RSYNC) $(RSYNC_LOCATION)/$@ .
+

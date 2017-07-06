@@ -7,3 +7,9 @@ monetdb_version: 11.25.20-20170424
 system_spec: el7.centos.aarch64
 monet_tarball_prefix: MonetDB-exanest
 monet_tarball_filename: MonetDB-exanest.tar.bz2
+
+centos_img: CentOS-7-aarch64.img
+centos_img_file: "{{centos_img}}.xz"
+
+qemu_efi_img: QEMU_EFI.fd
+qemu_efi_img_file: "{{qemu_efi_img}}.tar.gz"

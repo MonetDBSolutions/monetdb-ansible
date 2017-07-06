@@ -1,0 +1,18 @@
+- name: Create download dir
+  file:
+    path: "{{download_dir}}"
+    state: directory
+
+- name: Create download dir Makefile
+  template:
+    src: Makefile.in
+    dest: "{{download_dir}}/Makefile"
+
+- name: Initial download
+  #when: not not download_dir_items
+  command: "make -C {{download_dir | escape}} {{item}}"
+  register: download_result
+  changed_when: not 'Nothing to be done for' in download_result.get('stdout','')
+  with_items: "{{ download_dir_items }}"
+
+

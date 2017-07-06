@@ -1,0 +1,24 @@
+- name: Create work dir
+  file:
+    path: "{{qemu_dir}}"
+    state: directory
+
+- name: Unpack CentOS image
+  shell: "xz -d --stdout {{download_dir}}/{{centos_img}}.xz > {{centos_img}}.tmp && mv {{centos_img}}.tmp {{centos_img}}"
+  args:
+    #creates: "{{qemu_dir}}/{{centos_img}}"
+    chdir: "{{qemu_dir}}"
+    creates: "{{centos_img}}"
+
+- name: Unpack EFI image
+  unarchive:
+    remote_src: yes
+    src: "{{ download_dir }}/{{ qemu_efi_img }}.tar.gz"
+    dest: "{{ qemu_dir }}"
+    creates: "{{ qemu_dir }}/{{ qemu_efi_img }}"
+
+- name: Pad EFI image
+  command: "dd if={{qemu_dir}}/{{qemu_efi_img}} of={{qemu_dir}}/efi.fd bs=64M count=1 conv=sync"
+  args:
+    creates: "{{ qemu_dir }}/efi.fd"
+
