@@ -2,7 +2,7 @@
   <name>{{ inventory_hostname }}</name>
   <memory unit='GiB'>4</memory>
   <currentMemory unit='GiB'>4</currentMemory>
-  <vcpu placement='static'>2</vcpu>
+  <vcpu placement='static'>1</vcpu>
   <os>
     <type arch='aarch64' machine='virt-2.6'>hvm</type>
     <loader readonly='yes' type='pflash'>{{qemu_dir}}/efi.fd</loader>
