@@ -61,7 +61,7 @@
 - name: Reboot to pick up interface rename
   remote_user: root
   when: ifcfg_virt0.changed
-  command: /sbin/reboot
+  shell: "( sleep 3 && shutdown -r now & echo goodbye; ); echo world"
 
 - name: Wait for the server to finish rebooting
   when: ifcfg_virt0.changed
