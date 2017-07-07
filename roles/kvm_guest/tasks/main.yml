@@ -1,0 +1,73 @@
+- name: Create config file
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  template:
+    src: kvm.xml.in
+    dest: "{{qemu_dir}}/{{inventory_hostname}}.xml"
+
+- name: Create EFI vars image
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  command: "dd if=/dev/zero of={{qemu_dir}}/{{inventory_hostname}}.vars.fd bs=64M count=1"
+  args:
+    creates: "{{qemu_dir}}/{{inventory_hostname}}.vars.fd"
+
+- name: Create QCOW2 image
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  command: "qemu-img create -f qcow2 -b {{qemu_dir}}/{{centos_img}} {{qemu_dir}}/{{inventory_hostname}}.qcow2"
+  args:
+    creates: "{{qemu_dir}}/{{inventory_hostname}}.qcow2"
+
+- name: Create VM
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  command: "virsh create {{qemu_dir}}/{{inventory_hostname}}.xml"
+  register: vm_creation
+  failed_when: vm_creation.get('stderr') and not 'already exists with uuid' in vm_creation.stderr
+  changed_when: not vm_creation.get('stderr') or not 'already exists with uuid' in vm_creation.stderr
+
+- name: Enable ssh forwarding
+  delegate_to: "{{kvm_host}}"
+  command: "virsh qemu-monitor-command --hmp {{inventory_hostname}} 'hostfwd_add ::{{2200+vm_id}}-:22'"
+  register: hostfwd_creation
+  failed_when: False or "invalid" in hostfwd_creation.stdout
+  changed_when: not "could not set up host forwarding rule" in hostfwd_creation.stdout
+
+- name: Wait for the server to come up
+  delegate_to: "{{kvm_host}}"
+  wait_for:
+    host: 127.0.0.1
+    port: "{{2200+vm_id}}"
+    search_regex: OpenSSH
+
+- name: Set host name
+  remote_user: root
+  hostname: 
+    name: "{{inventory_hostname}}"
+
+- name: Set up private network
+  remote_user: root
+  when: private_net_ip is defined
+  template:
+    src: ifcfg_virt0.in
+    dest: /etc/sysconfig/network-scripts/ifcfg-virt0
+  register: ifcfg_virt0
+
+- name: Reboot to pick up interface rename
+  remote_user: root
+  when: ifcfg_virt0.changed
+  command: /sbin/reboot
+
+- name: Wait for the server to finish rebooting
+  when: ifcfg_virt0.changed
+  delegate_to: "{{kvm_host}}"
+  wait_for:
+    delay: 30
+    host: 127.0.0.1
+    port: "{{2200+vm_id}}"
+    search_regex: OpenSSH

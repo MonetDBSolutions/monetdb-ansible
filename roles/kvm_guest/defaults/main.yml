@@ -1,0 +1,7 @@
+private_net_multicast_address: 230.0.0.1
+private_net_multicast_port: 5599
+private_net_hwaddr: "52:99:00:00:00:{{'%02x' % vm_id}}"
+private_net_netmask: "255.255.255.0"
+
+# Set this in inventory to enable networking:
+#private_net_ip: "10.99.0.{{vm_id}}"

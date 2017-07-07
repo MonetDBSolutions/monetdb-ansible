@@ -1,0 +1,7 @@
+DEVICE=virt0
+HWADDR={{private_net_hwaddr}}
+IPADDR={{private_net_ip}}
+NETMASK={{private_net_netmask}}
+ONBOOT=yes
+BOOTPROTO=none
+USERCTL=no
