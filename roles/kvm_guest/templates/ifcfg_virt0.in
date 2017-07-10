@@ -5,3 +5,4 @@ NETMASK={{private_net_netmask}}
 ONBOOT=yes
 BOOTPROTO=none
 USERCTL=no
+ZONE=trusted

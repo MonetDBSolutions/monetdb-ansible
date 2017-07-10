@@ -58,16 +58,34 @@
     dest: /etc/sysconfig/network-scripts/ifcfg-virt0
   register: ifcfg_virt0
 
+- name: Fill /etc/hosts
+  remote_user: root
+  template:
+    src: hosts.in
+    dest: /etc/hosts
+
 - name: Reboot to pick up interface rename
   remote_user: root
   when: ifcfg_virt0.changed
-  shell: "( sleep 3 && shutdown -r now & echo goodbye; ); echo world"
+  #shell: "( sleep 3 && /sbin/shutdown -r now 'rebooting due to networking change' & echo goodbye; ); echo world"
+  command: shutdown -r +1
 
 - name: Wait for the server to finish rebooting
   when: ifcfg_virt0.changed
   delegate_to: "{{kvm_host}}"
   wait_for:
-    delay: 30
+    delay: 90
     host: 127.0.0.1
     port: "{{2200+vm_id}}"
     search_regex: OpenSSH
+
+- name: Disable firewall for private network
+  when: private_net_ip is defined
+  remote_user: root
+  firewalld:
+    permanent: yes
+    immediate: yes
+    interface: virt0
+    zone: trusted
+    state: enabled
+
