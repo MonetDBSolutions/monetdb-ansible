@@ -6,6 +6,7 @@
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
 - name: Create user exanest
+  remote_user: root
   user:
     name: exanest
     groups: wheel
@@ -13,6 +14,7 @@
     password: "{{ password }}"
 
 - name: Add authorized ssh key
+  remote_user: root
   authorized_key:
     user: exanest
     state: present
@@ -20,3 +22,9 @@
   with_items:
     - ./files/public_key
     - ~/.ssh/id_rsa.pub
+
+- name: Set up passwordless sudo
+  remote_user: root
+  copy:
+    dest: /etc/sudoers.d/wheel
+    content: "%wheel	ALL=(ALL)	NOPASSWD: ALL"
