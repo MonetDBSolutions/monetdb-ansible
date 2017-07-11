@@ -21,7 +21,7 @@
     key: "{{ lookup('file', item) }}"
   with_items:
     - ./files/public_key
-    - ~/.ssh/id_rsa.pub
+    - "{{ personal_ssh_pubkey }}"
 
 - name: Set up passwordless sudo
   remote_user: root

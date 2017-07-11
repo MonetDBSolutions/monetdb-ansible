@@ -22,16 +22,36 @@
   Specific assumptions are recorded in each role.
 
 ** Available roles
-*** Download cache
+
+*** Download cache (deprecated)
     Make sure that files are downloaded in the host running ansible once, and
     upload them from here to the nodes. Instead of downloading the MonetDB
     tarball in every node, download it once at the localhost and upload it to
     the node when provisioning.
 
+    Deprecated in favor of the Download dir role.
+    
+*** Download dir
+
+    This role keep track of fetching data, for example the MonetDB tarball, the
+    base CentOS KVM image, data for the Air Traffic benchmark, etc.  Other roles
+    which require such data declare a dependency on on it, with an indication of
+    which data they need.  This makes sure the data is downloaded automatically.
+    If there are many nodes with access to a shared filesystem such as NFS or
+    BeeGFS, the ~download_dir~ role can also be run explicitly on a single node
+    to download the data only once.
+
+    Future work: add an rsync server role for environments without a shared
+    filesystem.  Then one node can download the files over the Internet and the
+    other nodes can fetch them locally over rsync.
+
 *** Exanest node
     This role prepares a server as an exanest node. Specifically it creates a
-    user ~exanest~ and adds an ssh public key to the authorized key list of that
-    user. The key should be placed at ~roles/exanest_node/files/public_key~.
+    user ~exanest~ and adds ssh public keys to the authorized key list of that
+    user. A generic ExaNeSt ssh key is taken from
+    ~roles/exanest_node/files/public_key~, the user's personal key is taken from
+    ~$HOME/.ssh/id_rsa.pub~.  User ~exanest~ is also added to group ~wheel~ and
+    group ~wheel~ is granted permission to sudo without a password.
 
     Assumptions:
     - The root password is ~centos~. You can change it in the file
@@ -62,7 +82,7 @@
    project. Every time there was a trade-off between convenience and security,
    convenience was chosen. Be warned.
 
-   A (non complete) list of security concerns follows:
+   An incomplete list of security concerns follows:
 
    - Ansible is configured so as not to check node SSH keys
    - The ~root~ password is explicitly recorded in the file
@@ -70,5 +90,30 @@
    - The ~exanest~ user password is recorded in the file
      ~roles/monetdb_node/vars/main.yml~
    - The ~exanest~ user password is itself ~exanest~
+   - The ~exanest~ is a member of group ~wheel~
+   - Group wheel is allowed passwordless ~sudo~
 
    All in all, this project is *not* secure.
+
+** Usage scenarios
+
+*** Existing KVM guest: preexisting.yml
+
+    Manage an existing CentSO KVM image.  This means the guest is up and running
+    and ssh has been configured but for example the ~exanest~ user still needs
+    to be set up.
+
+*** KVM guests managed with Ansible: libvirt.yml
+
+    The guests have not yet been created, this workbook will first create them
+    and set up networking etc.
+
+*** Shared filesystem
+
+    The download_dir role is called explicitly on a designated node to
+    initialize the download directory.  
+
+*** Non-CentOS host: trenz.yml
+
+    For example, the Trenz boards run Ubuntu.  Here we download and install
+    MonetDB from source.
