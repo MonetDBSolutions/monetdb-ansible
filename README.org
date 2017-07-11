@@ -97,13 +97,18 @@
 
 ** Usage scenarios
 
-*** Existing KVM guest: preexisting.yml
+Each example consists of an example inventory and a .yml playbook file.  The
+inventory contains the node configuration and all parameters, if you run an
+experiment you should create a separate inventory file for each variant, and
+*keep them* with the experiment results for reference and ease of reproduction.
+
+*** Run TPC-H on an existing KVM guest: tpch-preexisting.yml
 
     Manage an existing CentSO KVM image.  This means the guest is up and running
     and ssh has been configured but for example the ~exanest~ user still needs
     to be set up.
 
-*** KVM guests managed with Ansible: libvirt.yml
+*** KVM guests managed with Ansible: atraf-libvirt.yml
 
     The guests have not yet been created, this workbook will first create them
     and set up networking etc.
