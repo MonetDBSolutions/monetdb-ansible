@@ -4,16 +4,11 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-- hosts: download_cache
+- hosts: monetdb
   roles:
-    - download_cache
+  - exanest_node
 
 - hosts: monetdb
-  remote_user: exanest
   roles:
     - monetdb_node
-
-- hosts: monetdb
-  remote_user: exanest
-  roles:
-    - tpch_node
+#     - tpch_node

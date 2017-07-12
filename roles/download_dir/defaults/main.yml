@@ -1,2 +1,3 @@
-#download_dir: 
+download_dir: "{{ ansible_env.HOME }}/CACHE"
 download_dir_items: []
+rsync_location: rsync://toulouse.da.cwi.nl:14215/exanest/

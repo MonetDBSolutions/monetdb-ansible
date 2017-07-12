@@ -64,12 +64,14 @@
     src: hosts.in
     dest: /etc/hosts
 
+# This should really be moved to a handler..
 - name: Reboot to pick up interface rename
   remote_user: root
   when: ifcfg_virt0.changed
   #shell: "( sleep 3 && /sbin/shutdown -r now 'rebooting due to networking change' & echo goodbye; ); echo world"
   command: shutdown -r +1
 
+# This should also be part of the handler
 - name: Wait for the server to finish rebooting
   when: ifcfg_virt0.changed
   delegate_to: "{{kvm_host}}"

@@ -1,7 +1,14 @@
+# Makefile that knows how to download things
 
 RSYNC=rsync -W
 RSYNC_LOCATION={{rsync_location}}
 
+MONET_TARBALL_FILE={{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2
+MONET_TARBALL_URL=https://www.monetdbsolutions.com/downloads/HTM/$(MONET_TARBALL_FILE)
+
+
+
+# default is to download nothing
 default:
 
 kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
@@ -9,8 +16,19 @@ kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
 # We only support rsync right now
 
 {{centos_img_file}}:
-	$(RSYNC) $(RSYNC_LOCATION)/$@ .
+	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ .
 
 {{qemu_efi_img_file}}:
-	$(RSYNC) $(RSYNC_LOCATION)/$@ .
+	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ .
+
+
+monetdb: $(MONET_TARBALL_FILE).extracted
+
+$(MONET_TARBALL_FILE).extracted: $(MONET_TARBALL_FILE)
+	tar jxf $<
+	touch $@
+
+$(MONET_TARBALL_FILE):
+	curl -s -o "$@.tmp" $(MONET_TARBALL_URL)
+	mv $@.tmp $@
 

@@ -1,0 +1,17 @@
+# -*- mode: conf; -*-
+
+# There should be an entry in ~/.ssh/config that defines the hosts monetdb*.
+# For example in my .ssh/config:
+
+# Host monetdb01
+#  User exanest
+#  Hostname localhost
+#  Port 2231
+#  IdentityFile ~/.ssh/id_rsa
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+[monetdb]
+monetdb01
+
+[monetdb:vars]
+ansible_ssh_pipelining=True

@@ -3,4 +3,7 @@
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
 dependencies:
-  - { role: exanest_node }
+  # Must not depend on exanest_node.  If we do that, Ansible runs
+  # all remaining tasks as root which is not what we want.
+  #- { role: exanest_node }
+  - { role: download_dir, download_dir_items: [monetdb] }

@@ -8,26 +8,10 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-- name: Upload RPMs
-  copy:
-    src: "{{ local_download_cache }}/{{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2"
-    dest: "/home/exanest/{{ monet_tarball_filename }}"
-    owner: exanest
-    group: exanest
-    mode: 0644
-
-# Normally we would do this with the unarchive module, but it seems to be broken
-# (April 2017). See for instance:
-# https://github.com/ansible/ansible-modules-core/issues/3241#issuecomment-222268994
-- name: Unpack archive
-  command: "tar -xvf /home/exanest/{{ monet_tarball_filename }} -C /home/exanest"
-  args:
-    creates: /home/exanest/monetdb/rpms/*.rpm
-
 - name: Install MonetDB
   become: yes
   yum:
-    name: "/home/exanest/monetdb/rpms/{{ item }}-{{ monetdb_version }}.{{ system_spec }}.rpm"
+    name: "{{ download_dir }}/monetdb/rpms/{{ item }}-{{ monetdb_version }}.{{ system_spec }}.rpm"
     state: present
   with_items: "{{ packages }}"
   # notify: restart monetdb daemon
@@ -39,6 +23,7 @@
     state: present
 
 - name: Start monetdb daemon
+  become: yes
   service:
     name: monetdbd
     state: started

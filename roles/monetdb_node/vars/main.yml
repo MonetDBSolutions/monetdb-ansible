@@ -2,7 +2,6 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-ansible_become_pass: exanest
 packages:
   - MonetDB-stream
   - MonetDB
@@ -11,3 +10,5 @@ packages:
   - MonetDB-SQL-server5
   - MonetDB5-server-hugeint
   - MonetDB-SQL-server5-hugeint
+
+package_files: "{{ packages | map('regex_replace', '(.*)', '\\1.rpm') | list}}"
