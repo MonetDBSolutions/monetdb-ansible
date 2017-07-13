@@ -2,5 +2,6 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-# dependencies:
+dependencies:
+  - { role: download_dir, download_dir_items: [monetdb] }
 #   - { role: monetdb_node }

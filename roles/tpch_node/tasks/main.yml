@@ -4,27 +4,36 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
+
+- name: Create TPC-H generator directory
+  command: "rsync -r {{ download_dir }}/monetdb/tpch_gen/dbgen/ {{ tpch_gen_dir }}/"
+  args:
+    creates: "{{ tpch_gen_dir }}/Makefile"
+
 - name: Compile TPC-H generator
   command: make
   args:
-    chdir: /home/exanest/monetdb/tpch_gen/dbgen
-    creates: /home/exanest/monetdb/tpch_gen/dbgen/dbgen
+    chdir: "{{ tpch_gen_dir }}"
+    creates: "{{ tpch_gen_dir }}/dbgen"
 
 - name: Run TPC-H generator
-  command: ./dbgen -vf -s {{ scale_factor }}
+  command: ./dbgen -f -s {{ scale_factor }}
   args:
-    chdir: /home/exanest/monetdb/tpch_gen/dbgen
-    creates: /home/exanest/monetdb/tpch_gen/dbgen/region.tbl
+    chdir: "{{ tpch_gen_dir }}"
+    creates: "{{ tpch_gen_dir }}/region.tbl"
 
-- name: Create data directory
+- name: Create TPC-H scripts directory
+  command: "rsync -r {{ download_dir }}/monetdb/tpch_scripts/ {{ tpch_scripts_dir }}/"
+
+- name: Create TPC-H data directory
   file:
-    path: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
+    path: "{{ tpch_scripts_dir }}/SF-{{ db_name }}/data"
     state: directory
 
 - name: Move TPC-H data to data directory
   copy:
-    src: /home/exanest/monetdb/tpch_gen/dbgen/{{ item }}.tbl
-    dest: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
+    src: "{{ tpch_gen_dir }}/{{ item }}.tbl"
+    dest: "{{ tpch_scripts_dir }}/SF-{{ db_name }}/data"
     remote_src: True
   with_items: "{{ table_names }}"
 
@@ -36,7 +45,7 @@
 
 # - name: Delete original files
 #   file:
-#     path: /home/exanest/monetdb/tpch_gen/dbgen/{{ item }}
+#     path: "{{ tpch_gen_dir }}"/dbgen/{{ item }}
 #     state: absent
 #   with_items: "{{ table_files }}"
 
@@ -60,9 +69,9 @@
   command: monetdb release SF-{{ db_name }}
 
 - name: Create database schema
-  command: mclient -d SF-{{ db_name }} /home/exanest/monetdb/tpch_scripts/tpch_schema.sql
+  command: mclient -d SF-{{ db_name }} {{ tpch_scripts_dir }}/tpch_schema.sql
 
 - name: Load data in monetdb
   command: ./sf_build.sh SF-{{ db_name }}
   args:
-    chdir: /home/exanest/monetdb/tpch_scripts
+    chdir: "{{ tpch_scripts_dir }}"

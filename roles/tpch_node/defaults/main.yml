@@ -1,0 +1,4 @@
+scale_factor: 0.1
+db_name: 0p1
+tpch_gen_dir: "{{ansible_env.HOME}}/tpch_gen"
+tpch_scripts_dir: "{{ansible_env.HOME}}/tpch_scripts"
