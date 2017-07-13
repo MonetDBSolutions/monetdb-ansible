@@ -16,10 +16,20 @@ kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
 # We only support rsync right now
 
 {{centos_img_file}}:
-	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ .
+{% if rsync_location %}
+	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ $@.tmp
+{% else %}
+	curl -s -o "$@.tmp" 'http://mirror.centos.org/altarch/7/isos/aarch64/CentOS-7-aarch64.img.xz'
+{% endif %}
+	mv $@.tmp $@
 
 {{qemu_efi_img_file}}:
-	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ .
+{% if rsync_location %}
+	$(RSYNC) $(RSYNC_LOCATION)/qemu-images/$@ $@.tmp
+{% else %}
+	curl -s -o "$@.tmp" 'http://www.exanest.eu/wiki/images/c/c2/QEMU_EFI.fd.tar.gz'
+{% endif %}
+	mv $@.tmp $@
 
 
 monetdb: $(MONET_TARBALL_FILE).extracted
