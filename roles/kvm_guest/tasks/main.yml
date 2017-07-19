@@ -60,6 +60,7 @@
 
 - name: Fill /etc/hosts
   remote_user: root
+  when: private_net_ip is defined
   template:
     src: hosts.in
     dest: /etc/hosts
