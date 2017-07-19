@@ -1,0 +1,38 @@
+- name: Validate kvm host environment
+  assert:
+    that: "'ansible_env' not in hostvars[kvm_host].qemu_dir"
+    msg: "You have to gather facts about the KVM hosts for this to work"
+
+- name: Destroy VM
+  when: kvm_host is defined and vm_id is defined
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  command: "virsh destroy {{inventory_hostname}}"
+  register: vm_destruction
+  failed_when: vm_destruction.get('stderr') and not 'no domain with matching name' in vm_destruction.stderr
+  changed_when: not vm_destruction.get('stderr') or not 'no domain with matching name' in vm_destruction.stderr
+
+- name: Undefine VM
+  when: kvm_host is defined and vm_id is defined
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  command: "virsh undefine --nvram {{inventory_hostname}}"
+  register: vm_undefinition
+  failed_when: vm_undefinition.get('stderr') and not 'no domain with matching name' in vm_undefinition.stderr
+  changed_when: not vm_undefinition.get('stderr') or not 'no domain with matching name' in vm_undefinition.stderr
+
+- name: Delete files
+  when: kvm_host is defined and vm_id is defined
+  delegate_to: "{{kvm_host}}"
+  vars:
+    qemu_dir: "{{hostvars[kvm_host].qemu_dir}}"
+  file:
+    path: "{{qemu_dir}}/{{item}}"
+    state: absent
+  with_items:
+  - "{{inventory_hostname}}.vars.fd"
+  - "{{inventory_hostname}}.qcow2"
+  - "{{inventory_hostname}}.xml"
+

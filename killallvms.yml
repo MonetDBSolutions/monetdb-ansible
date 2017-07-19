@@ -1,0 +1,7 @@
+
+- hosts: kvm_hosts
+
+- hosts: exanest
+  gather_facts: no
+  roles:
+  - kvm_guest_no_more
