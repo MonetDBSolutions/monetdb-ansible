@@ -37,41 +37,26 @@
     remote_src: True
   with_items: "{{ table_names }}"
 
-# - name: Change owner
-#   file:
-#     path: /home/exanest/monetdb/tpch_scripts/SF-{{ db_name }}/data
-#     group: monetdb
-#     recurse: yes
-
-# - name: Delete original files
-#   file:
-#     path: "{{ tpch_gen_dir }}"/dbgen/{{ item }}
-#     state: absent
-#   with_items: "{{ table_files }}"
-
-# - name: Load files in monetDB
-#   command: ./sf_build.sh SF-{{ db_name }}
-#   args:
-#     chdir: /home/exanest/monetdb/tpch_scripts
-
 - name: Stop database SF-{{ db_name }}
-  command: monetdb stop SF-{{ db_name }}
-  ignore_errors: yes
+  command: "{{ monetdb_bin_dir }}/monetdb stop SF-{{ db_name }}"
+  register: stop_result
+  failed_when: stop_result.get('stderr') and not ('no such database' in stop_result.stderr or 'database is not running' in stop_result.stderr)
 
 - name: Destroy database SF-{{ db_name }}
-  command: monetdb destroy SF-{{ db_name }} -f
-  ignore_errors: yes
+  command: "{{ monetdb_bin_dir }}/monetdb destroy SF-{{ db_name }} -f"
+  register: destroy_result
+  failed_when: destroy_result.get('stderr') and not 'no such database' in destroy_result.stderr
 
 - name: Create database SF-{{ db_name }}
-  command: monetdb create SF-{{ db_name }}
+  command: "{{ monetdb_bin_dir }}/monetdb create SF-{{ db_name }}"
 
 - name: Release database SF-{{ db_name }}
-  command: monetdb release SF-{{ db_name }}
+  command: "{{ monetdb_bin_dir }}/monetdb release SF-{{ db_name }}"
 
 - name: Create database schema
-  command: mclient -d SF-{{ db_name }} {{ tpch_scripts_dir }}/tpch_schema.sql
+  command: "{{ monetdb_bin_dir }}/mclient -d SF-{{ db_name }} {{ tpch_scripts_dir }}/tpch_schema.sql"
 
 - name: Load data in monetdb
-  command: ./sf_build.sh SF-{{ db_name }}
+  command: "./sf_build.sh SF-{{ db_name }}"
   args:
     chdir: "{{ tpch_scripts_dir }}"
