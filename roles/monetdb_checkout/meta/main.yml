@@ -1,0 +1,3 @@
+
+dependencies:
+  - { role: download_dir, download_dir_items: [monetdb_checkout] }

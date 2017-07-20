@@ -1,0 +1,35 @@
+- name: Install deb packages
+  when: can_sudo and ansible_distribution.startswith(('Ubuntu', 'Debian'))
+  become: true
+  apt:
+    package: "{{ item }}"
+    state: present
+  with_items: 
+  - mercurial 
+  - gettext 
+  - libreadline-dev 
+  - libxml2-dev 
+  - openssl 
+  - libssl-dev 
+  - libtool 
+  - m4 
+  - automake 
+  - pkg-config 
+  - bison
+  - libatomic-ops-dev
+- name: Install rpm packages
+  when: can_sudo and ansible_distribution.startswith(('Red Hat', 'CentOS'))
+  become: true
+  yum:
+    package: "{{ item }}"
+    state: present
+  with_items: 
+  - mercurial 
+  - libtool
+  - gettext-devel
+  - libxml2-devel
+  - libatomic_ops-devel
+  - bison
+  - openssl-devel
+  - readline-devel
+  - automake

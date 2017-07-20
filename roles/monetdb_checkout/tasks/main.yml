@@ -1,0 +1,26 @@
+- name: Create source directory
+  file:
+    path: "{{ monetdb_src }}"
+    state: directory
+
+- name: Check if bootstrap tarball is present
+  stat:
+    path: "{{ download_dir }}/monetdb-checkout.tar.gz"
+  register: monetdb_checkout_tarball
+
+- name: Unpack aproximate source tree
+  when: monetdb_checkout_tarball.stat.exists
+  unarchive:
+    remote_src: True
+    src: "{{ download_dir }}/monetdb-checkout.tar.gz"
+    dest: "{{ monetdb_src }}"
+    creates: "{{ monetdb_src }}/HowToStart.rst"
+
+- name: Update source tree
+  hg:
+    dest: "{{ monetdb_src }}"
+    repo: "{{ hg_repo }}"
+    revision: "{{ hg_revision }}"
+    update: yes
+    force: yes
+    purge: yes

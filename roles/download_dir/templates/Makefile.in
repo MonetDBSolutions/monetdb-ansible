@@ -6,6 +6,8 @@ RSYNC_LOCATION={{rsync_location}}
 MONET_TARBALL_FILE={{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2
 MONET_TARBALL_URL=https://www.monetdbsolutions.com/downloads/HTM/$(MONET_TARBALL_FILE)
 
+MONET_CHECKOUT_FILE=monetdb-checkout.tar.gz
+
 
 
 # default is to download nothing
@@ -42,3 +44,11 @@ $(MONET_TARBALL_FILE):
 	curl -s -o "$@.tmp" $(MONET_TARBALL_URL)
 	mv $@.tmp $@
 
+
+monetdb_checkout: $(MONET_CHECKOUT_FILE)
+
+$(MONET_CHECKOUT_FILE):
+{% if rsync_location %}
+	$(RSYNC) $(RSYNC_LOCATION)/$@ $@.tmp
+	mv $@.tmp $@
+{% endif %}
