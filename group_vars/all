@@ -2,9 +2,6 @@
 
 # Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
 
-# deprecated
-local_download_cache: /tmp/download_cache
-
 # this should move to the inventory so it's
 # nicely explicit and can be archived with the
 # the other settings

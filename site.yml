@@ -1,0 +1,38 @@
+---
+
+# Example Ansible playbook for setting up the MonetDB benchmarks.
+
+#############################################################################
+# Uncomment this if you want Ansible to start the KVM host for you.
+# See hosts.example for information on how to configure this
+#############################################################################
+
+# Set up the host side environment used by the kvm_guest role.  Even
+# if you omit the kvm_host role, the "- hosts: kvm_hosts" line must
+# remain because it gathers information that the kvm_guest role needs,
+# in particular the qemu_dir setting.
+- hosts: kvm_hosts
+  roles:
+  - kvm_host
+
+# DO NOT COMBINE WITH OTHER PLAYS because of the gather_facts:no We
+# can't gather facts about the guests because they may not exist yet.
+- hosts: kvm_guests
+  gather_facts: no
+  roles:
+  - kvm_guest
+
+
+# DO NOT COMBINE WITH OTHER PLAYS because of the remote_user:root.
+# It sets up, for example, a dedicated exanest user.
+#
+- hosts: kvm_guests
+  remote_user: root
+  roles:
+  - exanest_node
+
+# Install MonetDB and TPC-H
+- hosts: tpc_h
+  roles:
+    - monetdb_node
+    - tpch_node

@@ -1,21 +1,109 @@
 # -*- mode: conf; -*-
+#
+# Ansible inventory file which defines the compute nodes and
+# settings used to run a benchmark.
 
-# There should be an entry in ~/.ssh/config that defines the hosts monetdb*.
-# For example in my .ssh/config:
+# There are some additional settings in group_vars/all but those
+# are not expected to change between experiments.
 
-# Host monetdb01
-#  Hostname localhost
-#  Port 2231
-#  IdentityFile ~/.ssh/id_rsa
+# The example playbook site.yml uses two main groups: kvm_guests and
+# (optionally) kvm_hosts.  Group monetdb contains the machines on
+# which we are going to run monetdb.  If we let Ansible manage the
+# KVM guests, group kvm_hosts lists the hosts on which the guests
+# will run.
 
-# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+# The kvm_guest role sets up port forwarding from port {2200+vm_id} on
+# the host to port 22 (ssh) on the guest.  This needs to be reflected
+# in your ssh config, for example:
+#
+# Host *
+#     ControlPath ~/.ssh/cm_socket/%r@%h:%p
+#     ControlPersist 5m
+# 
+# Host exa*
+#     User exanest
+#     # These VM's come and go, don't keep track of their host keys
+#     StrictHostKeyChecking no
+#     UserKnownHostsFile /dev/null
+#     # The definitions below set a ProxyCommand.  The host name
+#     # 'localhost' will be interpreted by the host the ProxyCommand
+#     # ssh's into.
+#     Hostname localhost
+# 
+# Host exa1
+#     Port 2201
+#     ProxyCommand ssh rocks085 -W %h:%p
+# 
+# Host exa2
+#     Port 2202
+#     ProxyCommand ssh rocks086 -W %h:%p
+# 
+# Host exa3
+#     Port 2203
+#     ProxyCommand ssh rocks087 -W %h:%p
+# 
+# Host exa4
+#     Port 2204
+#     ProxyCommand ssh rocks088 -W %h:%p
 
-[exanest]
-monetdb01
+[kvm_hosts]
+#rocks085
+#rocks086
+#rocks087
+rocks088
 
-[monetdb]
-monetdb01
-# monetdb02
+[kvm_hosts:vars]
+# Configuration specific to the kvm hosts.
+#
+# If download_dir points to a filesystem shared between nodes,
+# add something like the following to your playbook to do the
+# downloads only once:
+#   - hosts: kvm_hosts
+#     roles:
+#     - { role: download_dir, download_dir_items: [kvm_host] }
+#
+# You can enable ansible_ssh_pipelining if you know your
+# hosts support it.
 
-[download_cache]
-localhost
+qemu_dir = "{{ ansible_env.HOME }}/QEMU"
+#download_dir: "{{ ansible_env.HOME }}/CACHE"
+#ansible_ssh_pipelining=True
+
+
+[kvm_guests]
+# the vm_id and kvm_host parameters are only relevant if you have
+# multiple guests managed by the kvm_host and kvm_guest roles.  In
+# that case they should match your ssh configuration, see the example
+# above.
+
+#exa1 vm_id=1 kvm_host=rocks085
+#exa2 vm_id=2 kvm_host=rocks086
+#exa3 vm_id=3 kvm_host=rocks087
+exa4 vm_id=4 kvm_host=rocks088
+
+[kvm_guests:vars]
+# Configuration of the kvm guest nodes.  Set private_net_ip to have
+# the kvm_guest role set up a private net between the guests.  See
+# roles/kvm_guest/defaults/main.yml for more networking-related
+# configuration.
+#
+# Set rsync_location to retrieve the downloads from a (more local)
+# rsync server instead of fetching them from the Internet.
+#
+# SSH pipelining is safe on the Centos cloud image we use.
+
+ansible_ssh_pipelining=True
+#private_net_ip="10.99.0.{{vm_id}}"
+#rsync_location: rsync://toulouse.da.cwi.nl:14215/exanest/
+
+
+[tpc_h]
+# Host on which to run TPC-H
+exa4
+
+[tpc_h:vars]
+# Some TPC-H settings that can be modified, see
+# roles/tpch_node/defaults/main.yml for a complete list.
+
+#scale_factor: 0.1
+#db_name: 0p1
