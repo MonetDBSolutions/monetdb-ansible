@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -e -x
+
+# tricky business to make the relative paths
+# that come in from Ansible work correctly
+SRC="$(cd "$HOME"; cd {{ monetdb_src }}; pwd)"
+BUILD="$(cd "$(dirname "$0")"; pwd)"
+DEST="$(cd "$HOME"; mkdir -p {{ monetdb_prefix }}; cd {{ monetdb_prefix }}; pwd)"
+MAKE_THREADS="{{ hostvars[inventory_hostname].get('ansible_processor_vcpus') or ansible_processor_cores }}"
+
+cd "$SRC"
+rm -f configure
+./bootstrap 2>&1 | tee BOOTSTRAP.LOG
+test -x configure
+
+cd "$BUILD"
+rm -f config.status
+"$SRC/configure" --prefix="$DEST" --enable-optimize --disable-debug --disable-assert --disable-developer \
+	2>&1 | tee CONFIGURE.LOG
+test -x config.status
+
+if [ -n "$MAKE_THREADS" -a "$MAKE_THREADS" -gt 0 ];
+then
+	make -j"$MAKE_THREADS"
+else
+	make
+fi 2>&1 | tee BUILD.LOG
+make install 2>&1 | tee INSTALL.LOG
