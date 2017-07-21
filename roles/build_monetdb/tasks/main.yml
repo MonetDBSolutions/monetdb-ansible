@@ -1,27 +1,28 @@
 - name: Check if MonetDB present
+  when: force_build is not defined
   stat:
     path: "{{ monetdb_prefix }}/bin/mserver5"
   register: mserver5_present
 
 - name: Remove previous build directory
-  when: not mserver5_present.stat.exists
+  when: (force_build is defined and force_build) or not mserver5_present.stat.exists
   file:
     path: "{{ build_dir }}"
     state: absent
 
 - name: Create new build directory
-  when: not mserver5_present.stat.exists
+  when: (force_build is defined and force_build) or not mserver5_present.stat.exists
   file:
     path: "{{ build_dir }}"
     state: directory
 
 - name: Create build script
-  when: not mserver5_present.stat.exists
+  when: (force_build is defined and force_build) or not mserver5_present.stat.exists
   template:
     src: build.sh.j2
     dest: "{{ build_dir }}/build.sh"
     mode: a+x
 
 - name: Run build script
-  when: False
+  when: (force_build is defined and force_build) or not mserver5_present.stat.exists
   command: "{{ build_dir }}/build.sh"
