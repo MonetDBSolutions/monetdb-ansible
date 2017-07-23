@@ -1,0 +1,95 @@
+- name: Get database status
+  command: "{{ monetdb_bin_dir }}/monetdb status {{ atraf_db }}"
+  register: db_status
+  failed_when: "'stderr' in db_status and db_status.stderr and not 'no such database' in db_status.stderr"
+  changed_when: False
+
+- name: Create database
+  when: not db_status.stdout
+  command: "{{ monetdb_bin_dir }}/monetdb create {{ atraf_db }}"
+  register: db_created
+
+- name: Start database
+  when: db_created.changed or not 'R' in db_status.stdout_lines[1].split()[1]
+  command: "{{ monetdb_bin_dir }}/monetdb start {{ atraf_db }}"
+
+- name: Release database
+  when: db_created.changed or 'L' in db_status.stdout_lines[1].split()[1]
+  command: "{{ monetdb_bin_dir }}/monetdb release {{ atraf_db }}"
+
+- name: Get database details
+  shell: "{{ monetdb_bin_dir }}/monetdb status -l {{ atraf_db }} | sed -n -e 's/  connection uri: //p'"
+  register: mapi_uri
+  failed_when: not mapi_uri.stdout
+  changed_when: False
+
+- name: Figure out mapi uri
+  set_fact:
+    mapi_uri: "{{ mapi_uri.stdout }}"
+
+- name: Partition the data
+  set_fact:
+    partitioning: "{{ lookup('pipe', 'python partition.py subsets/' + atraf_subset + '/inputs.txt ' + ' '.join(groups['exanest-slaves'] or groups['exanest-master'])) }}"
+
+- name: Create work directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+  - "{{ atraf_dir }}"
+  - "{{ atraf_dir }}/sql"
+  - "{{ atraf_dir }}/answers"
+  - "{{ atraf_data_dir }}"
+
+- name: Create .monetdb
+  template:
+    src: dot.monetdb.in
+    dest: "{{ atraf_dir }}/.monetdb"
+
+- name: Generate scripts
+  template:
+    src: "{{ item }}.in"
+    dest: "{{ atraf_dir }}/{{ item }}"
+    mode: a+x
+  with_items:
+  - schema.sql
+  - collect.sh
+  - check.sh
+
+- name: Copy files
+  synchronize:
+    src: "{{item}}"
+    dest: "{{atraf_dir}}"
+  with_items:
+  - bench.py
+  - sql
+
+- name: Copy answers
+  synchronize:
+    src: "subsets/{{ atraf_subset }}/"
+    dest: "{{atraf_dir}}/answers"
+
+- name: Prepare data retrieval
+  template:
+    src: fetch-data.mk.in
+    dest: "{{ atraf_data_dir }}/Makefile"
+
+- name: Retrieve data
+  command: make -C {{ atraf_data_dir }} -j{{ hostvars[inventory_hostname].get('ansible_processor_vcpus') or ansible_processor_cores }}
+  register: retrieval_status
+  changed_when: retrieval_status.rc == 0 and not "Nothing to be done for 'all'" in retrieval_status.stdout
+
+- name: Drop existing schema
+  tags:
+  - load
+  command: "{{ monetdb_bin_dir}}/mclient -d {{ atraf_db }} -s 'DROP SCHEMA atraf'"
+  environment:
+    DOTMONETDBFILE: "{{ atraf_dir }}/.monetdb"
+
+- name: Load database
+  tags:
+  - load
+  - loadonly
+  command: "{{ monetdb_bin_dir}}/mclient -d {{ atraf_db }} {{ atraf_dir }}/schema.sql"
+  environment:
+    DOTMONETDBFILE: "{{ atraf_dir }}/.monetdb"

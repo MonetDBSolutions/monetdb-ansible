@@ -1,0 +1,29 @@
+#!/bin/bash
+
+REF="${1:-answers}"
+MCLIENT="$(cd "$HOME"; cd "{{monetdb_bin_dir}}"; pwd)/mclient"
+
+die() {
+	>&2 echo ":( $*"
+	exit 1
+}
+
+test -d "$REF" || die "Usage: $0 REF"
+
+check() {
+	local test="sql/$1.sql"
+	local ref="$REF/$1.csv"
+	dst="output.$1.csv"
+	shift
+	>&2 echo ":: $test"
+	"$MCLIENT" -d atraf -f csv "$@" > "$dst" || die "Mclient failed"
+	cmp "$ref" "$dst" || die "Output differs: diff \"$ref\" \"$dst\""
+	rm "$dst"
+}
+
+check rowcount -s 'select "Year" as "year", "Month" as "month", actual as rowcount from atraf.missing_rows order by "year", "month"'
+
+for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19
+do 
+	check q$i sql/q$i.sql
+done

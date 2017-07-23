@@ -1,0 +1,230 @@
+-- DROP SCHEMA IF EXISTS atraf;
+CREATE SCHEMA atraf;
+SET SCHEMA atraf;
+
+-- These tables remain empty but are used
+-- as a template for CREATE TABLE LIKE.
+
+CREATE TABLE "ontime_template" (
+	"Year" smallint DEFAULT NULL,
+	"Quarter" tinyint DEFAULT NULL,
+	"Month" tinyint DEFAULT NULL,
+	"DayofMonth" tinyint DEFAULT NULL,
+	"DayOfWeek" tinyint DEFAULT NULL,
+	"FlightDate" date DEFAULT NULL,
+	"UniqueCarrier" char(7) DEFAULT NULL,
+	"AirlineID" decimal(8,2) DEFAULT NULL,
+	"Carrier" char(2) DEFAULT NULL,
+	"TailNum" varchar(50) DEFAULT NULL,
+	"FlightNum" varchar(10) DEFAULT NULL,
+	"OriginAirportID" varchar(10) DEFAULT NULL,
+	"OriginAirportSeqID" varchar(10) DEFAULT NULL,
+	"OriginCityMarketID" varchar(10) DEFAULT NULL,
+	"Origin" char(5) DEFAULT NULL,
+	"OriginCityName" varchar(100) DEFAULT NULL,
+	"OriginState" char(2) DEFAULT NULL,
+	"OriginStateFips" varchar(10) DEFAULT NULL,
+	"OriginStateName" varchar(100) DEFAULT NULL,
+	"OriginWac" decimal(8,2) DEFAULT NULL,
+	"DestAirportID" varchar(10) DEFAULT NULL,
+	"DestAirportSeqID" varchar(10) DEFAULT NULL,
+	"DestCityMarketID" varchar(10) DEFAULT NULL,
+	"Dest" char(5) DEFAULT NULL,
+	"DestCityName" varchar(100) DEFAULT NULL,
+	"DestState" char(2) DEFAULT NULL,
+	"DestStateFips" varchar(10) DEFAULT NULL,
+	"DestStateName" varchar(100) DEFAULT NULL,
+	"DestWac" decimal(8,2) DEFAULT NULL,
+	"CRSDepTime" decimal(8,2) DEFAULT NULL,
+	"DepTime" decimal(8,2) DEFAULT NULL,
+	"DepDelay" decimal(8,2) DEFAULT NULL,
+	"DepDelayMinutes" decimal(8,2) DEFAULT NULL,
+	"DepDel15" decimal(8,2) DEFAULT NULL,
+	"DepartureDelayGroups" decimal(8,2) DEFAULT NULL,
+	"DepTimeBlk" varchar(20) DEFAULT NULL,
+	"TaxiOut" decimal(8,2) DEFAULT NULL,
+	"WheelsOff" decimal(8,2) DEFAULT NULL,
+	"WheelsOn" decimal(8,2) DEFAULT NULL,
+	"TaxiIn" decimal(8,2) DEFAULT NULL,
+	"CRSArrTime" decimal(8,2) DEFAULT NULL,
+	"ArrTime" decimal(8,2) DEFAULT NULL,
+	"ArrDelay" decimal(8,2) DEFAULT NULL,
+	"ArrDelayMinutes" decimal(8,2) DEFAULT NULL,
+	"ArrDel15" decimal(8,2) DEFAULT NULL,
+	"ArrivalDelayGroups" decimal(8,2) DEFAULT NULL,
+	"ArrTimeBlk" varchar(20) DEFAULT NULL,
+	"Cancelled" tinyint DEFAULT NULL,
+	"CancellationCode" char(1) DEFAULT NULL,
+	"Diverted" tinyint DEFAULT NULL,
+	"CRSElapsedTime" decimal(8,2) DEFAULT NULL,
+	"ActualElapsedTime" decimal(8,2) DEFAULT NULL,
+	"AirTime" decimal(8,2) DEFAULT NULL,
+	"Flights" decimal(8,2) DEFAULT NULL,
+	"Distance" decimal(8,2) DEFAULT NULL,
+	"DistanceGroup" tinyint DEFAULT NULL,
+	"CarrierDelay" decimal(8,2) DEFAULT NULL,
+	"WeatherDelay" decimal(8,2) DEFAULT NULL,
+	"NASDelay" decimal(8,2) DEFAULT NULL,
+	"SecurityDelay" decimal(8,2) DEFAULT NULL,
+	"LateAircraftDelay" decimal(8,2) DEFAULT NULL,
+	"FirstDepTime" varchar(10) DEFAULT NULL,
+	"TotalAddGTime" varchar(10) DEFAULT NULL,
+	"LongestAddGTime" varchar(10) DEFAULT NULL,
+	"DivAirportLandings" varchar(10) DEFAULT NULL,
+	"DivReachedDest" varchar(10) DEFAULT NULL,
+	"DivActualElapsedTime" varchar(10) DEFAULT NULL,
+	"DivArrDelay" varchar(10) DEFAULT NULL,
+	"DivDistance" varchar(10) DEFAULT NULL,
+	"Div1Airport" varchar(10) DEFAULT NULL,
+	"Div1AirportID" varchar(10) DEFAULT NULL,
+	"Div1AirportSeqID" varchar(10) DEFAULT NULL,
+	"Div1WheelsOn" varchar(10) DEFAULT NULL,
+	"Div1TotalGTime" varchar(10) DEFAULT NULL,
+	"Div1LongestGTime" varchar(10) DEFAULT NULL,
+	"Div1WheelsOff" varchar(10) DEFAULT NULL,
+	"Div1TailNum" varchar(10) DEFAULT NULL,
+	"Div2Airport" varchar(10) DEFAULT NULL,
+	"Div2AirportID" varchar(10) DEFAULT NULL,
+	"Div2AirportSeqID" varchar(10) DEFAULT NULL,
+	"Div2WheelsOn" varchar(10) DEFAULT NULL,
+	"Div2TotalGTime" varchar(10) DEFAULT NULL,
+	"Div2LongestGTime" varchar(10) DEFAULT NULL,
+	"Div2WheelsOff" varchar(10) DEFAULT NULL,
+	"Div2TailNum" varchar(10) DEFAULT NULL,
+	"Div3Airport" varchar(10) DEFAULT NULL,
+	"Div3AirportID" varchar(10) DEFAULT NULL,
+	"Div3AirportSeqID" varchar(10) DEFAULT NULL,
+	"Div3WheelsOn" varchar(10) DEFAULT NULL,
+	"Div3TotalGTime" varchar(10) DEFAULT NULL,
+	"Div3LongestGTime" varchar(10) DEFAULT NULL,
+	"Div3WheelsOff" varchar(10) DEFAULT NULL,
+	"Div3TailNum" varchar(10) DEFAULT NULL,
+	"Div4Airport" varchar(10) DEFAULT NULL,
+	"Div4AirportID" varchar(10) DEFAULT NULL,
+	"Div4AirportSeqID" varchar(10) DEFAULT NULL,
+	"Div4WheelsOn" varchar(10) DEFAULT NULL,
+	"Div4TotalGTime" varchar(10) DEFAULT NULL,
+	"Div4LongestGTime" varchar(10) DEFAULT NULL,
+	"Div4WheelsOff" varchar(10) DEFAULT NULL,
+	"Div4TailNum" varchar(10) DEFAULT NULL,
+	"Div5Airport" varchar(10) DEFAULT NULL,
+	"Div5AirportID" varchar(10) DEFAULT NULL,
+	"Div5AirportSeqID" varchar(10) DEFAULT NULL,
+	"Div5WheelsOn" varchar(10) DEFAULT NULL,
+	"Div5TotalGTime" varchar(10) DEFAULT NULL,
+	"Div5LongestGTime" varchar(10) DEFAULT NULL,
+	"Div5WheelsOff" varchar(10) DEFAULT NULL,
+	"Div5TailNum" varchar(10) DEFAULT NULL
+);
+
+CREATE TABLE tmp_template (
+        "Hour" TINYINT, "PredictedArrDelay" DECIMAL(8,2) DEFAULT 0.0
+);
+
+-- Every host has a local copy of tmp and a REPLICA TABLE of all of them.
+
+{% if partitioning.keys() == [inventory_hostname] %}
+CREATE TABLE "tmp" ( LIKE tmp_template );
+INSERT INTO "tmp" ("Hour")
+{% else %}
+CREATE REPLICA TABLE tmp ( LIKE tmp_template );
+{% for host in groups['exanest'] %}
+{% if host != inventory_hostname %}
+CREATE REMOTE TABLE "tmp_{{ host }}" (LIKE tmp_template) ON '{{ hostvars[host]['mapi_uri'] }}';
+{% else %}
+CREATE TABLE "tmp_{{ inventory_hostname }}" ( LIKE tmp_template );
+{% endif %}
+ALTER TABLE tmp ADD TABLE "tmp_{{ host }}";
+{% endfor %}
+
+INSERT INTO "tmp_{{ inventory_hostname }}" ("Hour")
+{% endif %}
+VALUES
+    (0), (1), (2), (3), (4), (5), 
+    (6), (7), (8), (9), (10), (11), 
+    (12), (13), (14), (15), (16), (17), 
+    (18), (19), (20), (21), (22), (23);
+
+
+-- Every slave has some part of the ontime data.
+-- Every node has a MERGE TABLE of all of them.
+
+{% if partitioning.keys() == [inventory_hostname] %}
+CREATE TABLE "ontime" ( LIKE "ontime_template" );
+{% for fragment in partitioning[inventory_hostname] %}
+COPY {{ fragment.lines - 1 }} OFFSET 2 RECORDS INTO "ontime"
+FROM '{{ atraf_data_dir }}/{{ fragment.file }}'
+USING DELIMITERS ',','\n','"'
+;
+{% endfor %}
+ALTER TABLE "ontime" SET READ ONLY;
+ANALYZE atraf."ontime";
+{% else %}
+CREATE MERGE TABLE "ontime" ( LIKE "ontime_template" );
+{% for host in partitioning %}
+
+{% if host == inventory_hostname %}
+CREATE TABLE "ontime_{{ host }}" ( LIKE "ontime_template" );
+{% for fragment in partitioning[host] %}
+COPY {{ fragment.lines - 1 }} OFFSET 2 RECORDS INTO "ontime_{{ host }}"
+FROM '{{ atraf_data_dir }}/{{ fragment.file }}'
+USING DELIMITERS ',','\n','"'
+;
+{% endfor %}
+ALTER TABLE "ontime_{{ host }}" SET READ ONLY;
+ANALYZE atraf."ontime_{{ host }}";
+{% else %}
+CREATE REMOTE TABLE "ontime_{{ host }}" ( LIKE "ontime_template" ) 
+ON '{{ hostvars[host]['mapi_uri'] }}';
+{% endif %}
+ALTER TABLE "ontime" ADD TABLE "ontime_{{ host }}";
+{% endfor %}
+{% endif %}
+
+CREATE FUNCTION histo (categories TINYINT)
+RETURNS TABLE (low INT, high INT, CntArrDelay INT)
+BEGIN
+    DECLARE minAD INT, sz INT, grp INT;
+    SET minAD = (SELECT min("ArrDelay") FROM ontime); 
+    SET sz = (SELECT (max("ArrDelay") - minAD)/categories FROM ontime);
+    SET grp = 0;
+
+    DECLARE TABLE tmp1(low INT, "CntArrDelay" INT DEFAULT 0);
+    WHILE (grp < categories) DO
+        INSERT INTO tmp1(low) VALUES (minAD + sz * grp);
+        SET grp = grp + 1;
+    END WHILE;
+
+    -- devide the ArrDelay values into groups
+    INSERT INTO tmp1
+    SELECT low, COUNT(*) AS "CntArrDelay"
+    FROM (SELECT minAD + sz * CAST(FLOOR(("ArrDelay" - minAD) / sz) AS INT) AS low
+          FROM ontime
+          WHERE "ArrDelay" IS NOT NULL) AS t
+    GROUP BY low;
+
+    RETURN
+        SELECT low, low + sz AS high, SUM("CntArrDelay") AS "CntArrDelay"
+        FROM tmp1
+        GROUP BY low
+        ORDER BY low;
+END;
+
+-- Check if COPY INTO BEST EFFORT lost any rows
+CREATE TABLE expected_rows ( "Year" INT, "Month" INT, "Rows" INT );
+{% for host in partitioning %}
+INSERT INTO expected_rows("Year", "Month", "Rows") VALUES
+{% for fragment in partitioning[host] %}
+	({{ fragment.year }}, {{ fragment.month }}, {{ fragment.lines - 1 }}){{ ";" if loop.last else "," }}
+{% endfor %}
+{% endfor %}
+
+CREATE VIEW missing_rows AS
+SELECT
+	e."Year" AS "Year",
+	e."Month" AS "Month",
+	e."Rows" AS expected,
+	(SELECT COUNT(*) FROM "ontime" AS o WHERE o."Year" = e."Year" AND o."Month" = e."Month") AS actual
+FROM
+	expected_rows AS e
+;

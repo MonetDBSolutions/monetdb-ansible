@@ -1,0 +1,19 @@
+# -*- makefile -*-
+
+RSYNC_URL=rsync://toulouse.da.cwi.nl:14215/exanest/atraf-data/
+
+CSVS = \
+{% for fragment in partitioning.get(inventory_hostname) or [] %}
+	{{ fragment.file }} \
+{% endfor %}
+
+# leave room above this to compensate for the final 
+# trailing slash
+
+all: $(CSVS)
+
+%.csv:
+	rsync $(RSYNC_URL:%/=%)/$@.xz $@.xz
+	xz -d <$@.xz >$@.tmp
+	mv $@.tmp $@
+	rm $@.xz
