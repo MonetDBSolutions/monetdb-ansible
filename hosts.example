@@ -66,7 +66,7 @@ rocks088
 # hosts support it.
 
 qemu_dir = "{{ ansible_env.HOME }}/QEMU"
-#download_dir: "{{ ansible_env.HOME }}/CACHE"
+#download_dir = "{{ ansible_env.HOME }}/CACHE"
 #ansible_ssh_pipelining=True
 
 
@@ -94,7 +94,7 @@ exa4 vm_id=4 kvm_host=rocks088
 
 ansible_ssh_pipelining=True
 #private_net_ip="10.99.0.{{vm_id}}"
-#rsync_location: rsync://toulouse.da.cwi.nl:14215/exanest/
+#rsync_location = rsync://toulouse.da.cwi.nl:14215/exanest/
 
 
 [tpc_h]
