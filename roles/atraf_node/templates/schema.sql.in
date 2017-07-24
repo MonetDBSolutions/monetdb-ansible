@@ -128,7 +128,7 @@ CREATE TABLE "tmp" ( LIKE tmp_template );
 INSERT INTO "tmp" ("Hour")
 {% else %}
 CREATE REPLICA TABLE tmp ( LIKE tmp_template );
-{% for host in groups['exanest'] %}
+{% for host in groups[atraf_group] %}
 {% if host != inventory_hostname %}
 CREATE REMOTE TABLE "tmp_{{ host }}" (LIKE tmp_template) ON '{{ hostvars[host]['mapi_uri'] }}';
 {% else %}

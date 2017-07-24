@@ -1,6 +1,6 @@
 # Makefile that knows how to download things
 
-RSYNC=rsync -W
+RSYNC=rsync -W -q
 RSYNC_LOCATION={{rsync_location}}
 
 MONET_TARBALL_FILE={{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2
@@ -68,10 +68,13 @@ $(MONET_CHECKOUT_FILE):
 # The dataset is very large and every node needs a different subset
 # The atraf_node role will ask us to download individual compressed files.
 
-atraf-data/%.csv.xz:
+atraf-data/%.csv.xz: atraf-data
 {% if rsync_location %}
 	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
 {% else %}
 	@echo "Can only retrieve $@ over rsync!"
 	exit 1
 {% endif %}
+
+atraf-data:
+	mkdir -p $@
