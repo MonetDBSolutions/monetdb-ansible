@@ -13,7 +13,7 @@ CSVS = \
 all: $(CSVS)
 
 %.csv:
-	rsync $(RSYNC_URL:%/=%)/$@.xz $@.xz
-	xz -d <$@.xz >$@.tmp
+	make -C {{ download_dir }} atraf-data/$@.xz
+	xz -d <{{download_dir}}/atraf-data/$@.xz >$@.tmp
 	mv $@.tmp $@
 	rm $@.xz

@@ -15,11 +15,10 @@ default:
 
 all: kvm_host monetdb monetdb_checkout
 
-# Files needed by kvm hosts
-kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
+#############################################################################
+# Role kvm_host
 
-# MonetDB arm64 binaries and tpch stuff
-monetdb: $(MONET_TARBALL_FILE).extracted
+kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
 
 {{centos_img_file}}:
 {% if rsync_location %}
@@ -37,6 +36,10 @@ monetdb: $(MONET_TARBALL_FILE).extracted
 {% endif %}
 	mv $@.tmp $@
 
+#############################################################################
+# Role monetdb
+
+monetdb: $(MONET_TARBALL_FILE).extracted
 
 $(MONET_TARBALL_FILE).extracted: $(MONET_TARBALL_FILE)
 	tar jxf $<
@@ -47,11 +50,32 @@ $(MONET_TARBALL_FILE):
 	curl -s -o "$@.tmp" $(MONET_TARBALL_URL)
 	mv $@.tmp $@
 
+#############################################################################
+# Role monetdb_checkout
 
 monetdb_checkout: $(MONET_CHECKOUT_FILE)
 
 $(MONET_CHECKOUT_FILE):
 {% if rsync_location %}
-	$(RSYNC) $(RSYNC_LOCATION)/$@ $@.tmp
-	mv $@.tmp $@
+	# rsync creates the file atomically, no reason to muck around with .tmp files
+	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
+{% else %}
+	# only available over rsync, will have to retrieve all of it using
+	# Mercurial.
+{% endif %}
+
+#############################################################################
+# Air Traffic benchmark data
+#
+# The dataset is very large and every node needs a different subset
+# The atraf_node role will ask us to download individual compressed files.
+
+atraf-data/%.csv.xz:
+{% if rsync_location %}
+	rsync $(RSYNC_URL:%/=%)/$@.xz $@.xz
+	# rsync creates the file atomically, no reason to muck around with .tmp files
+	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
+{% else %}
+	@echo "Can only retrieve $@ over rsync!"
+	exit 1
 {% endif %}
