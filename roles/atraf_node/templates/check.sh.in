@@ -23,7 +23,9 @@ check() {
 
 check rowcount -s 'select "Year" as "year", "Month" as "month", actual as rowcount from atraf.missing_rows order by "year", "month"'
 
-for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19
-do 
-	check q$i sql/q$i.sql
+for q in sql/q*.sql
+do
+        f=${q#sql/}
+        n=${f%.sql}
+        check $n $q
 done

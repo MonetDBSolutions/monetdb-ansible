@@ -6,6 +6,5 @@ SELECT CAST (FLOOR("CRSDepTime"%2400/100) AS INT) AS "Hour",
 FROM ontime
 GROUP BY "Origin", "Dest", "Carrier", "Hour"
 ORDER BY "PossibleLongDelay", "Hour", "Origin", "Dest", "Carrier"
-
 ;
 
