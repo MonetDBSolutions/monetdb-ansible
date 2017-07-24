@@ -13,9 +13,13 @@ MONET_CHECKOUT_FILE=monetdb-checkout.tar.gz
 # default is to download nothing
 default:
 
+all: kvm_host monetdb monetdb_checkout
+
+# Files needed by kvm hosts
 kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
 
-# We only support rsync right now
+# MonetDB arm64 binaries and tpch stuff
+monetdb: $(MONET_TARBALL_FILE).extracted
 
 {{centos_img_file}}:
 {% if rsync_location %}
@@ -34,12 +38,11 @@ kvm_host: {{centos_img_file}} {{qemu_efi_img_file}}
 	mv $@.tmp $@
 
 
-monetdb: $(MONET_TARBALL_FILE).extracted
-
 $(MONET_TARBALL_FILE).extracted: $(MONET_TARBALL_FILE)
 	tar jxf $<
 	touch $@
 
+# TODO add to rsync
 $(MONET_TARBALL_FILE):
 	curl -s -o "$@.tmp" $(MONET_TARBALL_URL)
 	mv $@.tmp $@
