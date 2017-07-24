@@ -31,8 +31,18 @@
   roles:
   - exanest_node
 
-# Install MonetDB and TPC-H
+# Install MonetDB from RPM, and TPC-H
 - hosts: tpc_h
   roles:
-    - monetdb_node
-    - tpch_node
+  - monetdb_node
+  - tpch_node
+
+# Install MonetDB from source, and the Air Traffic benchmark
+# (We haven't packaged the latest MonetDB for exanest yet)
+- hosts: atraf
+  roles:
+  - build_dependencies
+  - monetdb_checkout
+  - build_monetdb
+  - private_farm
+  - atraf_node
