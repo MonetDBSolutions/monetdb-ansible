@@ -1,5 +1,5 @@
 - name: Install deb packages
-  when: can_sudo and ansible_distribution.startswith(('Ubuntu', 'Debian'))
+  when: can_sudo and ansible_os_family == 'Debian'
   become: true
   apt:
     package: "{{ item }}"
@@ -20,7 +20,7 @@
   - bison
   - libatomic-ops-dev
 - name: Install rpm packages
-  when: can_sudo and ansible_distribution.startswith(('Red Hat', 'CentOS'))
+  when: can_sudo and ansible_os_family == 'RedHat'
   become: true
   yum:
     package: "{{ item }}"
