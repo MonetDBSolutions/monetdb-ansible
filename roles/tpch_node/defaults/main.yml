@@ -4,3 +4,6 @@ tpch_gen_dir: "{{ansible_env.HOME}}/tpch_gen"
 tpch_scripts_dir: "{{ansible_env.HOME}}/tpch_scripts"
 
 monetdb_bin_dir: "{% if monetdb_prefix is defined %}{{ monetdb_prefix }}/bin{% else %}/usr/bin{% endif %}"
+
+monetdb_user: monetdb
+monetdb_password: monetdb

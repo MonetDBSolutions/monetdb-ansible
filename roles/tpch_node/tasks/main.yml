@@ -25,6 +25,11 @@
 - name: Create TPC-H scripts directory
   command: "rsync -r {{ download_dir }}/monetdb/tpch_scripts/ {{ tpch_scripts_dir }}/"
 
+- name: Create .monetdb
+  template:
+    src: dot.monetdb.in
+    dest: "{{ tpch_scripts_dir }}/.monetdb"
+
 - name: Create TPC-H data directory
   file:
     path: "{{ tpch_scripts_dir }}/SF-{{ db_name }}/data"
@@ -55,6 +60,8 @@
 
 - name: Create database schema
   command: "{{ monetdb_bin_dir }}/mclient -d SF-{{ db_name }} {{ tpch_scripts_dir }}/tpch_schema.sql"
+  args:
+    chdir: "{{ tpch_scripts_dir }}"
 
 - name: Load data in monetdb
   command: "./sf_build.sh SF-{{ db_name }}"
