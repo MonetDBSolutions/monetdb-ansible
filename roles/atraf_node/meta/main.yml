@@ -1,0 +1,6 @@
+---
+
+# Author: Panagiotis Koutsourakis <kutsurak@monetdbsolutions.com>
+
+dependencies:
+  - { role: download_dir, download_dir_items: [] }
