@@ -55,13 +55,11 @@ $(MONET_TARBALL_FILE):
 
 monetdb_checkout: $(MONET_CHECKOUT_FILE)
 
+# rsync creates the file atomically, no reason to muck around with .tmp files
 $(MONET_CHECKOUT_FILE):
 {% if rsync_location %}
-	# rsync creates the file atomically, no reason to muck around with .tmp files
 	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
 {% else %}
-	# only available over rsync, will have to retrieve all of it using
-	# Mercurial.
 {% endif %}
 
 #############################################################################
@@ -72,8 +70,6 @@ $(MONET_CHECKOUT_FILE):
 
 atraf-data/%.csv.xz:
 {% if rsync_location %}
-	rsync $(RSYNC_URL:%/=%)/$@.xz $@.xz
-	# rsync creates the file atomically, no reason to muck around with .tmp files
 	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
 {% else %}
 	@echo "Can only retrieve $@ over rsync!"
