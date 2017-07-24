@@ -9,6 +9,9 @@ import re
 import sys
 import subprocess
 
+# handle rare case where someone passes a relative path
+MCLIENT=os.path.join(os.path.expanduser('~'), '{{ monetdb_prefix }}', 'bin/mclient')
+
 class Issue(Exception):
     def __init__(self, msg):
         self.msg = msg
@@ -66,10 +69,10 @@ def main(argv0, config=None, db=DEFAULT_DB):
             say("%s,%d,%s,%f", qq(config), seq, qq(name), duration)
 
 def run(db, queryfile):
-    cmd = ['mclient', '-d', db, '-ims', queryfile]
+    cmd = [MCLIENT, '-d', db, '-ims', queryfile]
     try:
         output = subprocess.check_output(cmd)
-    except CalledProcessError, e:
+    except subprocess.CalledProcessError, e:
         print >>sys.stderr, "Query %s triggered an exception:" % queryfile
         raise e
 

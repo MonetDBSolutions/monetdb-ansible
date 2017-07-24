@@ -55,13 +55,13 @@
   - schema.sql
   - collect.sh
   - check.sh
+  - bench.py
 
 - name: Copy files
   synchronize:
     src: "{{item}}"
     dest: "{{atraf_dir}}"
   with_items:
-  - bench.py
   - sql
 
 - name: Copy answers
