@@ -1,2 +1,1 @@
-monetdb_src: "{{ ansible_env.HOME }}/MonetDB"
-hg_repo: http://dev.monetdb.org/hg/MonetDB
+hg_repo: https://dev.monetdb.org/hg/MonetDB
