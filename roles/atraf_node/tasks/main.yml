@@ -29,7 +29,7 @@
 
 - name: Partition the data
   set_fact:
-    partitioning: "{{ lookup('pipe', 'python partition.py subsets/' + atraf_subset + '/inputs.txt ' + ' '.join(groups['exanest-slaves'] or groups['exanest-master'])) }}"
+    partitioning: "{{ lookup('pipe', 'python partition.py subsets/' + atraf_subset + '/inputs.txt ' + (atraf_slave_nodes or atraf_master_node) }}"
 
 - name: Create work directories
   file:

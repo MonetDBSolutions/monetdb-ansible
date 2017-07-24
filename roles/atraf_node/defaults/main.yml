@@ -7,3 +7,8 @@ atraf_data_dir: "{{ atraf_dir }}/data"
 
 monetdb_user: monetdb
 monetdb_password: monetdb
+
+# no clue how to get this in list for, fortunately 
+# space separated is good enough for now
+atraf_master_node: "{% for host in groups[atraf_group] %}{% if hostvars[host].get('atraf_master', False) %}{{host}}{% endif %}{%endfor%}"
+atraf_slave_nodes: "{% for host in groups[atraf_group] %}{% if not hostvars[host].get('atraf_master', False) %}{{host}} {% endif %}{%endfor%}"
