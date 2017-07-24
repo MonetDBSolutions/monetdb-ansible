@@ -1,7 +1,7 @@
 #!/bin/bash
 
 REF="${1:-answers}"
-MCLIENT="$(cd "$HOME"; cd "{{monetdb_bin_dir}}"; pwd)/mclient"
+MCLIENT="$(cd "$HOME"; cd "{{monetdb_prefix }}/bin"; pwd)/mclient"
 
 die() {
 	>&2 echo ":( $*"

@@ -1,24 +1,24 @@
 - name: Get database status
-  command: "{{ monetdb_bin_dir }}/monetdb status {{ atraf_db }}"
+  command: "{{ monetdb_prefix }}/bin/monetdb status {{ atraf_db }}"
   register: db_status
   failed_when: "'stderr' in db_status and db_status.stderr and not 'no such database' in db_status.stderr"
   changed_when: False
 
 - name: Create database
   when: not db_status.stdout
-  command: "{{ monetdb_bin_dir }}/monetdb create {{ atraf_db }}"
+  command: "{{ monetdb_prefix }}/bin/monetdb create {{ atraf_db }}"
   register: db_created
 
 - name: Start database
   when: db_created.changed or not 'R' in db_status.stdout_lines[1].split()[1]
-  command: "{{ monetdb_bin_dir }}/monetdb start {{ atraf_db }}"
+  command: "{{ monetdb_prefix }}/bin/monetdb start {{ atraf_db }}"
 
 - name: Release database
   when: db_created.changed or 'L' in db_status.stdout_lines[1].split()[1]
-  command: "{{ monetdb_bin_dir }}/monetdb release {{ atraf_db }}"
+  command: "{{ monetdb_prefix }}/bin/monetdb release {{ atraf_db }}"
 
 - name: Get database details
-  shell: "{{ monetdb_bin_dir }}/monetdb status -l {{ atraf_db }} | sed -n -e 's/  connection uri: //p'"
+  shell: "{{ monetdb_prefix }}/bin/monetdb status -l {{ atraf_db }} | sed -n -e 's/  connection uri: //p'"
   register: mapi_uri
   failed_when: not mapi_uri.stdout
   changed_when: False
@@ -82,7 +82,7 @@
 - name: Drop existing schema
   tags:
   - load
-  command: "{{ monetdb_bin_dir}}/mclient -d {{ atraf_db }} -s 'DROP SCHEMA atraf'"
+  command: "{{ monetdb_prefix }}/bin/mclient -d {{ atraf_db }} -s 'DROP SCHEMA atraf'"
   environment:
     DOTMONETDBFILE: "{{ atraf_dir }}/.monetdb"
 
@@ -90,6 +90,6 @@
   tags:
   - load
   - loadonly
-  command: "{{ monetdb_bin_dir}}/mclient -d {{ atraf_db }} {{ atraf_dir }}/schema.sql"
+  command: "{{ monetdb_prefix }}/bin/mclient -d {{ atraf_db }} {{ atraf_dir }}/schema.sql"
   environment:
     DOTMONETDBFILE: "{{ atraf_dir }}/.monetdb"

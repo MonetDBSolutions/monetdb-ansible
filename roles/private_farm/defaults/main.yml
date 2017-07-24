@@ -1,3 +1,1 @@
-monetdb_farm_dir: "{{ ansible_env.HOME }}/FARM"
-
-monetdb_bin_dir: "{% if monetdb_prefix is defined %}{{ monetdb_prefix }}/bin{% else %}/usr/bin{% endif %}"
+monetdb_prefix: /usr

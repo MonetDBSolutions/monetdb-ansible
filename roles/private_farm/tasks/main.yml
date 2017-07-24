@@ -1,26 +1,26 @@
 - name: Check merovingian status
-  command: "{{ monetdb_bin_dir }}/monetdb status"
+  command: "{{ monetdb_prefix }}/bin/monetdb status"
   register: monetdb_status
   failed_when: not (monetdb_status.rc == 0 or ('stderr' in monetdb_status and "cannot find a control socket" in monetdb_status.stderr))
   changed_when: False
 
 - name: Create db farm
   when: monetdb_status.rc != 0
-  command: "{{ monetdb_bin_dir }}/monetdbd create {{ monetdb_farm_dir }}"
+  command: "{{ monetdb_prefix }}/bin/monetdbd create {{ monetdb_farm_dir }}"
   args:
     creates: "{{ monetdb_farm_dir }}/.merovingian_properties"
 
 - name: Get current listenaddr
-  command: "{{ monetdb_bin_dir }}/monetdbd get listenaddr {{ monetdb_farm_dir }}"
+  command: "{{ monetdb_prefix }}/bin/monetdbd get listenaddr {{ monetdb_farm_dir }}"
   register: farm_listenaddr
   failed_when: not (monetdb_status.rc == 0 or 'stderr' in monetdb_status)
   changed_when: False
 
 - name: Set listenaddr to 0.0.0.0
   when: not "0.0.0.0" in farm_listenaddr.get('stdout', '')
-  command: "{{ monetdb_bin_dir }}/monetdbd set listenaddr=0.0.0.0 {{ monetdb_farm_dir }}"
+  command: "{{ monetdb_prefix }}/bin/monetdbd set listenaddr=0.0.0.0 {{ monetdb_farm_dir }}"
   failed_when: not (monetdb_status.rc == 0 or 'stderr' in monetdb_status)
 
 - name: Start db farm
   when: monetdb_status.rc != 0
-  command: "{{ monetdb_bin_dir }}/monetdbd start {{ monetdb_farm_dir }}"
+  command: "{{ monetdb_prefix }}/bin/monetdbd start {{ monetdb_farm_dir }}"
