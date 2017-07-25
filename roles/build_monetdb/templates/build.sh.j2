@@ -7,7 +7,7 @@ set -e -x
 SRC="$(cd "$HOME"; cd {{ monetdb_src }}; pwd)"
 BUILD="$(cd "$(dirname "$0")"; pwd)"
 DEST="$(cd "$HOME"; mkdir -p {{ monetdb_prefix }}; cd {{ monetdb_prefix }}; pwd)"
-MAKE_THREADS="{{ hostvars[inventory_hostname].get('ansible_processor_vcpus') or ansible_processor_cores }}"
+MAKE_THREADS="{{ hostvars[inventory_hostname].get('make_threads') or hostvars[inventory_hostname].get('ansible_processor_vcpus') or ansible_processor_cores }}"
 
 cd "$SRC"
 rm -f configure
@@ -16,7 +16,7 @@ test -x configure
 
 cd "$BUILD"
 rm -f config.status
-"$SRC/configure" --prefix="$DEST" --enable-optimize --disable-debug --disable-assert --disable-developer \
+"$SRC/configure" --prefix="$DEST" --enable-optimize --disable-debug --disable-assert --disable-developer --disable-pyintegration --disable-py3integration \
 	2>&1 | tee CONFIGURE.LOG
 test -x config.status
 
