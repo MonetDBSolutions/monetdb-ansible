@@ -13,6 +13,6 @@ CSVS = \
 all: $(CSVS)
 
 %.csv:
-	make -C {{ download_dir }} atraf-data/$@.xz
+	make -C {{ download_dir }} atraf-data atraf-data/$@.xz
 	xz -d <{{download_dir}}/atraf-data/$@.xz >$@.tmp
 	mv $@.tmp $@

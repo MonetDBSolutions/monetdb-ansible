@@ -68,7 +68,7 @@ $(MONET_CHECKOUT_FILE):
 # The dataset is very large and every node needs a different subset
 # The atraf_node role will ask us to download individual compressed files.
 
-atraf-data/%.csv.xz: atraf-data
+atraf-data/%.csv.xz:
 {% if rsync_location %}
 	$(RSYNC) $(RSYNC_LOCATION)/$@ $@
 {% else %}

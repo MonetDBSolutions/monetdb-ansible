@@ -6,6 +6,7 @@
 - name: Read atraf subset
   when: atraf_subset is defined
   command: "sed -e 's/ .*//' subsets/{{atraf_subset}}/inputs.txt"
+  delegate_to: localhost
   register: atraf_inputs
 
 - name: Create download dir Makefile
