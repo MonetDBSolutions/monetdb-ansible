@@ -1,0 +1,51 @@
+# monetdb-ansible version: 866f05fc5d167bd7cfcc318b80d3ab7d58da7a59 (Tue Jul 25 16:59:43 2017 +0200)
+
+# monetdb-version: f003897c4d35 (Jul2017, Tue Jul 25 14:55:03 2017 +0200)
+
+
+
+#
+# Build MonetDB from source on the Trenz machines, install a
+# small Atraf subset
+# 
+[atraf]
+trenz10 atraf_master=True
+#trenz11
+#trenz12
+#trenz13
+
+[monetdb_rpm:children]
+# not used, everything is built from source
+
+[monetdb_source:children]
+atraf
+
+[all:vars]
+ansible_ssh_pipelining=True
+#rsync_location = rsync://toulouse.da.cwi.nl:14215/exanest/
+rsync_location =
+
+shared_dir = /mnt/eusrv64_shared/monetdb
+download_dir = "{{ shared_dir }}/download"
+monetdb_src = "{{ shared_dir }}/MonetDB"
+monetdb_prefix = "{{ shared_dir }}/monet"
+
+make_threads = 4
+
+[atraf:vars]
+# the group members need to know the name of the group they're
+atraf_group = atraf  
+
+atraf_subset = 3mo
+
+[monetdb_source:vars]
+can_sudo = True
+
+#changeset:   64342:f003897c4d35
+#branch:      Jul2017
+#date:        Tue Jul 25 14:55:03 2017 +0200
+hg_revision = f003897c4d35
+
+
+monetdb_farm_dir = "{{ ansible_env.HOME }}/FARM"
+
