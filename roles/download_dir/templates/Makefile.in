@@ -78,3 +78,8 @@ atraf-data/%.csv.xz: atraf-data
 
 atraf-data:
 	mkdir -p $@
+
+# This is for preloading
+{% if atraf_subset is defined %}
+atraf:{% for file in atraf_inputs.stdout_lines %} atraf-data/{{file}}.xz{% endfor %}
+{% endif %}
