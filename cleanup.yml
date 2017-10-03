@@ -1,0 +1,21 @@
+- hosts: my_scilens
+  tasks:
+
+  - name: Kill processes
+    command: killall -9 monetdbd mserver5
+
+  - name: Delete files
+    file:
+      path: "{{item}}"
+      state: absent
+    ignore_errors: yes
+    with_items:
+    - ATRAF
+    - BUILD
+    - CACHE
+    - FARM
+    - MonetDB
+    - QEMU
+    - .monetdb
+
+
