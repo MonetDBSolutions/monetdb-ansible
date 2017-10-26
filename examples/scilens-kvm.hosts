@@ -1,0 +1,57 @@
+#
+# Build MonetDB from source on the SciLens cluster machines.
+# 
+
+[kvm_hosts]
+rocks085
+rocks086
+rocks087
+rocks088
+
+[kvm_guests]
+exa1 vm_id=1 kvm_host=rocks085
+exa2 vm_id=2 kvm_host=rocks086
+exa3 vm_id=3 kvm_host=rocks087
+exa4 vm_id=3 kvm_host=rocks088
+
+[tpc_h]
+rocks090
+
+[atraf]
+exa1 atraf_master=True
+exa2
+exa3
+
+[monetdb_rpm:children]
+# not used, everything is built from source
+
+[monetdb_source:children]
+tpc_h
+atraf
+
+[all:vars]
+ansible_ssh_pipelining=True
+rsync_location = rsync://toulouse.da.cwi.nl:14215/exanest/
+
+[kvm_hosts:vars]
+qemu_dir = "{{ ansible_env.HOME }}/QEMU"
+
+[kvm_guests:vars]
+private_net_ip = "10.99.0.{{vm_id}}"
+
+[tpc_h:vars]
+# only defaults
+
+[atraf:vars]
+# the group members need to know the name of the group they're
+atraf_group = atraf  
+
+atraf_subset = few
+
+[monetdb_source:vars]
+can_sudo = True
+hg_revision = Jul2017
+monetdb_src = "{{ ansible_env.HOME }}/MonetDB"
+monetdb_prefix = "{{ ansible_env.HOME }}/monet"
+monetdb_farm_dir = "{{ ansible_env.HOME }}/FARM"
+
