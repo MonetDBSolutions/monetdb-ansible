@@ -18,20 +18,28 @@
   command: "{{ monetdb_prefix }}/bin/monetdb release {{ atraf_db }}"
 
 - name: Get database details
+  tags:
+  - generate
   shell: "{{ monetdb_prefix }}/bin/monetdb status -l {{ atraf_db }} | sed -n -e 's/  connection uri: //p'"
   register: mapi_uri
   failed_when: not mapi_uri.stdout
   changed_when: False
 
 - name: Figure out mapi uri
+  tags:
+  - generate
   set_fact:
     mapi_uri: "{{ mapi_uri.stdout }}"
 
 - name: Partition the data
+  tags:
+  - generate
   set_fact:
     partitioning: "{{ lookup('pipe', 'python partition.py subsets/' + atraf_subset + '/inputs.txt ' + (atraf_slave_nodes or atraf_master_node)) }}"
 
 - name: Create work directories
+  tags:
+  - generate
   file:
     path: "{{ item }}"
     state: directory
@@ -42,6 +50,8 @@
   - "{{ atraf_data_dir }}"
 
 - name: Create .monetdb
+  tags:
+  - generate
   template:
     src: dot.monetdb.in
     dest: "{{ atraf_dir }}/.monetdb"
@@ -58,6 +68,8 @@
   - bench.py
 
 - name: Copy files
+  tags:
+  - generate
   synchronize:
     src: "{{item}}"
     dest: "{{atraf_dir}}"
@@ -65,6 +77,8 @@
   - sql
 
 - name: Copy answers
+  tags:
+  - generate
   synchronize:
     src: "subsets/{{ atraf_subset }}/"
     dest: "{{atraf_dir}}/answers"
