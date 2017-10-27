@@ -4,6 +4,8 @@ monetdb_prefix: /usr
 
 atraf_dir: "{{ ansible_env.HOME }}/ATRAF"
 atraf_data_dir: "{{ atraf_dir }}/data"
+atraf_answers_dir: "{{ atraf_dir }}/answers-{{ atraf_db }}"
+atraf_schema_sql: "{{ atraf_dir }}/schema-{{ atraf_db }}.sql"
 
 monetdb_user: monetdb
 monetdb_password: monetdb

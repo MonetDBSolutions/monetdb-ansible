@@ -46,8 +46,8 @@
   with_items:
   - "{{ atraf_dir }}"
   - "{{ atraf_dir }}/sql"
-  - "{{ atraf_dir }}/answers"
   - "{{ atraf_data_dir }}"
+  - "{{ atraf_answers_dir }}"
 
 - name: Create .monetdb
   tags:
@@ -57,15 +57,24 @@
     dest: "{{ atraf_dir }}/.monetdb"
 
 - name: Generate scripts
+  tags:
+  - generate
   template:
     src: "{{ item }}.in"
     dest: "{{ atraf_dir }}/{{ item }}"
     mode: a+x
   with_items:
-  - schema.sql
   - collect.sh
   - check.sh
   - bench.py
+
+- name: Generate schema
+  tags:
+  - generate
+  template:
+    src: schema.sql.in
+    dest: "{{ atraf_schema_sql }}"
+    mode: a+x
 
 - name: Copy files
   tags:
@@ -81,7 +90,7 @@
   - generate
   synchronize:
     src: "subsets/{{ atraf_subset }}/"
-    dest: "{{atraf_dir}}/answers"
+    dest: "{{atraf_answers_dir}}"
 
 - name: Prepare data retrieval
   template:
@@ -104,6 +113,6 @@
   tags:
   - load
   - loadonly
-  command: "{{ monetdb_prefix }}/bin/mclient -d {{ atraf_db }} {{ atraf_dir }}/schema.sql"
+  command: "{{ monetdb_prefix }}/bin/mclient -d {{ atraf_db }} {{ atraf_schema_sql }}"
   environment:
     DOTMONETDBFILE: "{{ atraf_dir }}/.monetdb"

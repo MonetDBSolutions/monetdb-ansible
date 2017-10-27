@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REF="answers"
-DB="${1:-atraf}"
+DB="${1:-{{ atraf_db }}}"
+REF="answers-$DB"
 MCLIENT="$(cd "$HOME"; cd "{{monetdb_prefix }}/bin"; pwd)/mclient"
 
 
