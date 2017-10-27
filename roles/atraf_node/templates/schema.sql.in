@@ -213,10 +213,12 @@ END;
 -- Check if COPY INTO BEST EFFORT lost any rows
 CREATE TABLE expected_rows ( "Year" INT, "Month" INT, "Rows" INT );
 {% for host in partitioning %}
+{% if partitioning[host] %}
 INSERT INTO expected_rows("Year", "Month", "Rows") VALUES
 {% for fragment in partitioning[host] %}
 	({{ fragment.year }}, {{ fragment.month }}, {{ fragment.lines - 1 }}){{ ";" if loop.last else "," }}
 {% endfor %}
+{% endif %}
 {% endfor %}
 
 CREATE VIEW missing_rows AS
