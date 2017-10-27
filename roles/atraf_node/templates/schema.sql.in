@@ -123,7 +123,7 @@ CREATE TABLE tmp_template (
 
 -- Every host has a local copy of tmp and a REPLICA TABLE of all of them.
 
-{% if partitioning.keys() == [inventory_hostname] %}
+{% if partitioning.keys() == [atraf_master_node] %}
 CREATE TABLE "tmp" ( LIKE tmp_template );
 INSERT INTO "tmp" ("Hour")
 {% else %}
@@ -149,7 +149,7 @@ VALUES
 -- Every slave has some part of the ontime data.
 -- Every node has a MERGE TABLE of all of them.
 
-{% if partitioning.keys() == [inventory_hostname] %}
+{% if partitioning.keys() == [atraf_master_node] %}
 CREATE TABLE "ontime" ( LIKE "ontime_template" );
 {% for fragment in partitioning[inventory_hostname] %}
 COPY {{ fragment.lines - 1 }} OFFSET 2 RECORDS INTO "ontime"
