@@ -14,7 +14,7 @@ Ansible role reference
 Roles and their parameters
 
 
-### Role `monetdb-package` ###
+### Role `monetdb_package` ###
 
 Installs MonetDB from binary packages.  When this role is finished,
 MonetDB has been installed from project-specific binary packages.  The
@@ -24,32 +24,32 @@ reboot.
 
 Required parameters: 
 
-- `project-name`, used as a directory prefix while downloading the
+- `project_name`, used as a directory prefix while downloading the
   binary packages.
 
 Optional parameters: 
 
-- `packages-url`, URL of the packages tar file.  Defaults to
-  `https://www.monetdbsolutions.com/downloads/<project-name>/<project-name>_<packages_os>_distribution_<packages_version>.tar.bz2`
+- `packages_url`, URL of the packages tar file.  Defaults to
+  `https://www.monetdbsolutions.com/downloads/<project_name>/<project_name>_<packages_os>_distribution_<packages_version>.tar.bz2`
   (*note:* does `.bz2` make sense for rpm/deb files that have already
   been compressed?  I think not.)
 
 - `packages_version`, used to derive the default `packages_url`.
   Either timestamp-like (`20171030`, `20171107b`) or the default `latest`.
 
-- `packages-os`, used to derive the default `packages-url`.  For
+- `packages_os`, used to derive the default `packages_url`.  For
   example `xenial` or `fedora27` (*note:* right?)
 
-- `packages-arch`, used to derive the default `packages-url`.
+- `packages_arch`, used to derive the default `packages_url`.
 
 - `download_dir`, where to extract the tar file.  Defaults to `~/download/packages`.
 
 
-### Role `monetdb-setup` ###
+### Role `monetdb_setup` ###
 
 Sets up `.monetdb` and creates and starts the necessary databases.
-This role uses the parameters of the `tpch-benchmark` and
-`atraf-benchmark` roles to decide which databases to start.
+This role uses the parameters of the `tpch_benchmark` and
+`atraf_benchmark` roles to decide which databases to start.
 
 Optional parameters:
 
@@ -64,7 +64,7 @@ Optional parameters:
   the home directory.  If explicitly empty no file will be written.
 
 
-### Role `tpch-bencmark` ###
+### Role `tpch_bencmark` ###
 
 Sets up the TPC-H benchmark.  
 
@@ -76,6 +76,6 @@ Optional parameters
 
 - `tpch_db` database to load
 
-### Role `atraf-benchmark` ###
+### Role `atraf_benchmark` ###
 
 TODO
