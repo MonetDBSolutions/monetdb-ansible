@@ -1,0 +1,5 @@
+---
+
+- hosts: monetdb
+  roles:
+  - monetdb_package

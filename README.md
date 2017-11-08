@@ -34,6 +34,9 @@ Optional parameters:
   (*note:* does `.bz2` make sense for rpm/deb files that have already
   been compressed?  I think not.)
 
+- `monetdb_version`, used in some package names, default `11.27.9`.
+  (*note:* should there be a default at all?)
+
 - `packages_version`, used to derive the default `packages_url`.
   Either timestamp-like (`20171030`, `20171107b`) or the default `latest`.
 

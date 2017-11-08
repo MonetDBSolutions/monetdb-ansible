@@ -1,0 +1,59 @@
+#
+
+# project_name has no default
+packages_url: "https://www.monetdbsolutions.com/downloads/{{project_name}}/{{project_name}}_{{packages_os}}_distribution_{{packages_version}}.tar.bz2"
+packages_os: "{{ansible_distribution_release}}"
+packages_version: latest
+packages_arch: "{{ 'amd64' if '86' in ansible_architecture else 'arm64' }}"
+download_dir: "{{ ansible_env.HOME }}/downloads/packages"
+packages:
+  deb:
+  - libmonetdb-stream8
+  - libmonetdb-client9
+  - libmonetdb15
+  - monetdb-client
+  - monetdb-client-tools
+  - monetdb5-server
+  - monetdb5-server-hugeint
+  - monetdb5-sql
+  - monetdb5-sql-hugeint
+  rpm:
+  - todo
+
+# For now, automatic packages_os only works well on
+# Debian and Ubuntu, not clear to me what to do for
+# Fedora and CentOS
+# Examples of ansible_distribution_* variables on
+# various platforms:
+#
+#   "ansible_distribution": "Ubuntu",
+#   "ansible_distribution_file_parsed": true,
+#   "ansible_distribution_file_path": "/etc/os-release",
+#   "ansible_distribution_file_variety": "Debian",
+#   "ansible_distribution_major_version": "16",
+#   "ansible_distribution_release": "xenial",
+#   "ansible_distribution_version": "16.04",
+#
+#   "ansible_distribution": "Fedora",
+#   "ansible_distribution_file_parsed": true,
+#   "ansible_distribution_file_path": "/etc/redhat-release",
+#   "ansible_distribution_file_variety": "RedHat",
+#   "ansible_distribution_major_version": "26",
+#   "ansible_distribution_release": "Twenty Six",
+#   "ansible_distribution_version": "26",
+#
+#   "ansible_distribution": "Debian",
+#   "ansible_distribution_file_parsed": true,
+#   "ansible_distribution_file_path": "/etc/os-release",
+#   "ansible_distribution_file_variety": "Debian",
+#   "ansible_distribution_major_version": "7",
+#   "ansible_distribution_release": "wheezy",
+#   "ansible_distribution_version": "7.11",
+#
+#   "ansible_distribution": "CentOS",
+#   "ansible_distribution_file_parsed": true,
+#   "ansible_distribution_file_path": "/etc/redhat-release",
+#   "ansible_distribution_file_variety": "RedHat",
+#   "ansible_distribution_major_version": "7",
+#   "ansible_distribution_release": "Core",
+#   "ansible_distribution_version": "7.4.1708",
