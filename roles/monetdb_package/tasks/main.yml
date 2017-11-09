@@ -22,3 +22,9 @@
   with_items: "{{ packages['deb'] if ansible_distribution_file_variety == 'Debian' else [] }}"
   become: true
 
+- name: Start MonetDBD
+  service:
+    name: monetdbd
+    state: started
+    enabled: yes
+  become: true
