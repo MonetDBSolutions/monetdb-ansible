@@ -1,0 +1,34 @@
+- name: Add current user to group
+  when: not not monetdb_group
+  user:
+    name: "{{ansible_user_id}}"
+    groups: "{{monetdb_group}}"
+    append: yes
+  become: yes
+
+- name: Create .monetdb
+  when: not not dotmonetdb_dir
+  template:
+    src: dotmonetdb.in
+    dest: "{{dotmonetdb_dir}}/.monetdb"
+
+- name: Create database
+  command: "monetdb create {{item}}"
+  register: create_db
+  failed_when: "'stderr' in create_db and create_db.stderr and not 'already exists' in create_db.stderr"
+  changed_when: "'stdout' in create_db and 'created database in' in create_db.stdout"
+  with_items: "{{bench_dbs}}"
+
+- name: Release database
+  command: "monetdb release {{item}}"
+  register: release_db
+  failed_when: "'stderr' in release_db and release_db.stderr and not 'not under maintenance' in release_db.stderr"
+  changed_when: "'stdout' in release_db and 'taken database out of ' in release_db.stdout"
+  with_items: "{{bench_dbs}}"
+
+#- name: Start database
+#  command: "monetdb start {{item}}"
+#  register: start_db
+#  failed_when: "'stderr' in start_db and start_db.stderr and not 'already running' in start_db.stderr"
+#  changed_when: "'stdout' in start_db and '... done' in start_db.stdout"
+#  with_items: "{{bench_dbs}}"

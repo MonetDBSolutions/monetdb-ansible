@@ -1,0 +1,8 @@
+
+monetdb_user: monetdb
+monetdb_password: monetdb
+monetdb_group: monetdb
+dotmonetdb_dir: "{{ansible_env.HOME}}"
+
+# there must be a nicer way to do this
+bench_dbs: "{{ (hostvars[inventory_hostname].get('atraf_db', '') + ' ' + hostvars[inventory_hostname].get('tpch_db', '')).strip().split() }}"

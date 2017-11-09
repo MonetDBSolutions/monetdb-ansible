@@ -3,3 +3,4 @@
 - hosts: monetdb
   roles:
   - monetdb_package
+  - project_setup

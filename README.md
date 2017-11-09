@@ -48,11 +48,16 @@ Optional parameters:
 - `download_dir`, where to extract the tar file.  Defaults to `~/download/packages`.
 
 
-### Role `monetdb_setup` ###
+### Role `project_setup` ###
 
-Sets up `.monetdb` and creates and starts the necessary databases.
+This is an odds and ends role which sets up `.monetdb` and creates
+and releases the necessary databases.
 This role uses the parameters of the `tpch_benchmark` and
-`atraf_benchmark` roles to decide which databases to start.
+`atraf_benchmark` roles to decide which databases to create.
+
+Also adds the current user to group `monetdb`, or whatever the value of `monetdb_group` is,
+unless empty.  This is necessary because the binary packages
+restrict access to members of this group.
 
 Optional parameters:
 
