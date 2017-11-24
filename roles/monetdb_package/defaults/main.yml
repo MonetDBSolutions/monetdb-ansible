@@ -1,7 +1,8 @@
 #
 
 # project_name has no default
-packages_url: "https://www.monetdbsolutions.com/downloads/{{project_name}}/{{project_name}}_{{packages_os}}_distribution_{{packages_version}}.tar.bz2"
+packages_url: "{{packages_url_base}}{{project_name}}/{{project_name}}_{{packages_os}}_distribution_{{packages_version}}.tar.bz2"
+packages_url_base: "https://www.monetdbsolutions.com/downloads/"
 packages_os: "{{ansible_distribution_release}}"
 packages_version: latest
 packages_arch: "{{ 'amd64' if '86' in ansible_architecture else 'arm64' }}"
