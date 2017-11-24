@@ -1,0 +1,7 @@
+atraf_dir: "{{ ansible_env.HOME }}/ATRAF"
+atraf_data_dir: "{{ atraf_dir }}/data"
+
+# no clue how to get this in list form.
+# Fortunately, space separated is good enough for now.
+atraf_master_node: "{% for host in ansible_play_hosts %}{% if hostvars[host].get('atraf_master', False) %}{{host}}{% endif %}{%endfor%}"
+atraf_slave_nodes: "{% for host in ansible_play_hosts %}{% if not hostvars[host].get('atraf_master', False) %}{{host}} {% endif %}{%endfor%}"

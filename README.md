@@ -87,4 +87,10 @@ Optional parameters
 
 ### Role `atraf_benchmark` ###
 
-TODO
+Bla bla bla
+
+Optional parameters:
+
+- `atraf_subset`
+
+- `atraf_data_url`, no default yet :(

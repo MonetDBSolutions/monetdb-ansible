@@ -4,3 +4,4 @@
   roles:
   - monetdb_package
   - project_setup
+  - atraf_node

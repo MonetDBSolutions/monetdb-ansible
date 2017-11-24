@@ -1,0 +1,31 @@
+#!/bin/bash
+
+REF="${1:-answers}"
+MCLIENT="mclient"
+
+die() {
+	>&2 echo ":( $*"
+	exit 1
+}
+
+test -d "$REF" || die "Usage: $0 REF"
+
+check() {
+	local test="sql/$1.sql"
+	local ref="$REF/$1.csv"
+	dst="output.$1.csv"
+	shift
+	>&2 echo ":: $test"
+	"$MCLIENT" -d '{{atraf_db}}' -f csv "$@" > "$dst" || die "Mclient failed"
+	cmp "$ref" "$dst" || die "Output differs: diff \"$ref\" \"$dst\""
+	rm "$dst"
+}
+
+check rowcount -s 'select "Year" as "year", "Month" as "month", actual as rowcount from atraf.missing_rows order by "year", "month"'
+
+for q in sql/q*.sql
+do
+        f=${q#sql/}
+        n=${f%.sql}
+        check $n $q
+done

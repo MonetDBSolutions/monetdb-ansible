@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DEST="$1"
+MCLIENT="mclient"
+
+die() {
+	echo ":( $*"
+	exit 1
+}
+
+if [ "x$DEST" = "x" ]; then
+	die "Usage: $0 DEST"
+fi
+
+if [ -d "$DEST" ]; then
+	if [ "x$(ls $DEST)" != x ]; then
+		die "Directory not empty : $DEST"
+	fi
+fi
+
+mkdir -v -p "$DEST"
+
+to() {
+	local dst
+	dst="$DEST/$1.csv"
+	shift
+	>&2 echo ":: $dst"
+	"$MCLIENT" -d atraf -f csv "$@" | tee "$dst"
+}
+
+to rowcount -s 'select "Year" as "year", "Month" as "month", actual as rowcount from atraf.missing_rows order by "year", "month"'
+
+for i in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19
+do
+	to q$i sql/q$i.sql
+done

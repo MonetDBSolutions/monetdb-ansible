@@ -1,0 +1,21 @@
+# -*- makefile -*-
+
+DATA_URL={{atraf_data_url}}
+
+CSVS = \
+{% for fragment in partitioning.get(inventory_hostname) or [] %}
+	{{ fragment.file }} \
+{% endfor %}
+
+# leave room above this to compensate for the final
+# trailing slash
+
+all: $(CSVS)
+
+%.csv: %.csv.xz
+	xz -d <$< >$@.tmp
+	mv $@.tmp $@
+
+%.csv.xz:
+	curl -C - $(DATA_URL)$@ -o $@.tmp
+	mv $@.tmp $@
