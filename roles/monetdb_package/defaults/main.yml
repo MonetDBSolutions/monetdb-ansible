@@ -21,6 +21,8 @@ packages:
   rpm:
   - todo
 
+dbfarm_dir: /var/monetdb5/dbfarm
+
 # For now, automatic packages_os only works well on
 # Debian and Ubuntu, not clear to me what to do for
 # Fedora and CentOS

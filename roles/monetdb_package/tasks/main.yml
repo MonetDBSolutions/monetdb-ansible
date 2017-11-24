@@ -29,6 +29,28 @@
     enabled: yes
   become: true
 
+- name: Get current listenaddr
+  command: "monetdbd get listenaddr {{dbfarm_dir}}"
+  register: dbfarm_listenaddr
+  #failed_when: not (monetdb_status.rc == 0 or 'stderr' in monetdb_status)
+  changed_when: False
+  become: true
+
+- name: Set listenaddr to 0.0.0.0
+  when: not "0.0.0.0" in dbfarm_listenaddr.get('stdout', '')
+  command: "monetdbd set listenaddr=0.0.0.0 {{dbfarm_dir}}"
+  #failed_when: not (monetdb_status.rc == 0 or 'stderr' in monetdb_status)
+  register: dbfarm_listenaddr_set
+  become: true
+
+- name: Restart MonetDB
+  when: dbfarm_listenaddr_set.changed
+  service:
+    name: monetdbd
+    state: restarted
+  become: true
+
+# This doesn't work reliably, don't know why
 - name: Wait for MonetDBD to become available
   wait_for:
     port: 50000

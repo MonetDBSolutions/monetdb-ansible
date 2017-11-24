@@ -45,7 +45,8 @@ Optional parameters:
 
 - `packages_arch`, used to derive the default `packages_url`.
 
-- `download_dir`, where to extract the tar file.  Defaults to `~/download/packages`.
+- `download_dir`, where to extract the tar file.  Defaults to
+  `~/download/packages`.
 
 
 ### Role `project_setup` ###
