@@ -28,3 +28,8 @@
     state: started
     enabled: yes
   become: true
+
+- name: Wait for MonetDBD to become available
+  wait_for:
+    port: 50000
+    search_regex: merovingian
