@@ -1,7 +1,7 @@
 # Makefile that knows how to download things
 
 RSYNC=rsync -W -q
-RSYNC_LOCATION={{rsync_location}}
+RSYNC_LOCATION={{rsync_location }}
 
 MONET_TARBALL_FILE={{ monet_tarball_prefix }}-{{ monetdb_version }}.{{ system_spec }}.tar.bz2
 MONET_TARBALL_URL=https://www.monetdbsolutions.com/downloads/HTM/$(MONET_TARBALL_FILE)

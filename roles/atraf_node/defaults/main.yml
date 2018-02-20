@@ -1,4 +1,5 @@
-atraf_db: atraf
+atraf_db: "{{ atraf_subset }}_{{ groups[atraf_group] | length }}x"
+
 
 monetdb_prefix: /usr
 

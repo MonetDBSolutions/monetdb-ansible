@@ -19,6 +19,7 @@
   - pkg-config 
   - bison
   - libatomic-ops-dev
+  - libpcre3-dev
 - name: Install rpm packages
   when: can_sudo and ansible_os_family == 'RedHat'
   become: true

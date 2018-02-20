@@ -4,16 +4,16 @@
   failed_when: "'stderr' in db_status and db_status.stderr and not 'no such database' in db_status.stderr"
   changed_when: False
 
-- name: Create database
+- name: "Create database {{ atraf_db }}"
   when: not db_status.stdout
   command: "{{ monetdb_prefix }}/bin/monetdb create {{ atraf_db }}"
   register: db_created
 
-- name: Start database
+- name: "Start database {{ atraf_db }}"
   when: db_created.changed or not 'R' in db_status.stdout_lines[1].split()[1]
   command: "{{ monetdb_prefix }}/bin/monetdb start {{ atraf_db }}"
 
-- name: Release database
+- name: "Release database {{ atraf_db }}"
   when: db_created.changed or 'L' in db_status.stdout_lines[1].split()[1]
   command: "{{ monetdb_prefix }}/bin/monetdb release {{ atraf_db }}"
 

@@ -2,52 +2,18 @@
 
 # Example Ansible playbook for setting up the MonetDB benchmarks.
 
-#############################################################################
-# Uncomment this if you want Ansible to start the KVM host for you.
-# See hosts.example for information on how to configure this
-#############################################################################
-
-# Set up the host side environment used by the kvm_guest role.  Even
-# if you omit the kvm_host role, the "- hosts: kvm_hosts" line must
-# remain because it gathers information that the kvm_guest role needs,
-# in particular the qemu_dir setting.
-- hosts: kvm_hosts
-  roles:
-  - kvm_host
-
-# DO NOT COMBINE WITH OTHER PLAYS because of the gather_facts:no We
-# can't gather facts about the guests because they may not exist yet.
-- hosts: kvm_guests
-  gather_facts: no
-  roles:
-  - kvm_guest
-
-
-# DO NOT COMBINE WITH OTHER PLAYS because of the remote_user:root.
-# It sets up, for example, a dedicated exanest user.
-#
-- hosts: kvm_guests
-  remote_user: root
-  roles:
-  - exanest_node
-
-# Install MonetDB from RPM
-- hosts: monetdb_rpm
-  roles:
-  - monetdb_node
-
 # Install MonetDB from source
-- hosts: monetdb_source
+- hosts: atraf
   roles:
-  - build_dependencies
-  - monetdb_checkout
-  - build_monetdb
+#  - build_dependencies
+  #- monetdb_checkout
+  #- build_monetdb
   - private_farm
 
 # Install MonetDB from RPM, and TPC-H
-- hosts: tpc_h
-  roles:
-  - tpch_node
+#- hosts: tpc_h
+  #roles:
+  #- tpch_node
 
 # Install MonetDB from source, and the Air Traffic benchmark
 # (We haven't packaged the latest MonetDB for exanest yet)
