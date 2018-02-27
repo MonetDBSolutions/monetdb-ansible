@@ -1,0 +1,32 @@
+---
+
+- hosts: atraf
+  tasks:
+  - name: set the time
+    shell: ntpdate pool.ntp.org
+
+  - name: Create partition table
+    parted:
+      device: /dev/vdb
+      number: 1
+      state: present
+
+  - name: Create additional file system
+    become: true
+    filesystem:
+      fstype: xfs
+      dev: /dev/vdb1
+
+  - name: Mount additional file system
+    become: true
+    mount:
+      path: /xtra
+      src: /dev/vdb1
+      fstype: xfs
+      state: mounted
+
+  - name: Change permissions on additional file system
+    become: true
+    file:
+      path: /xtra/mdbs
+      state: directory
