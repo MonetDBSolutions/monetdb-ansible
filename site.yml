@@ -3,12 +3,12 @@
 # Example Ansible playbook for setting up the MonetDB benchmarks.
 
 # Install MonetDB from source
-- hosts: atraf
-  roles:
+#- hosts: atraf
+  #roles:
 #  - build_dependencies
   #- monetdb_checkout
   #- build_monetdb
-  - private_farm
+  #- private_farm
 
 # Install MonetDB from RPM, and TPC-H
 #- hosts: tpc_h

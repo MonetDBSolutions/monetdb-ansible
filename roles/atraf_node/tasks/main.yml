@@ -24,6 +24,7 @@
   changed_when: False
 
 - name: Figure out mapi uri
+  when: not (mapi_uri is defined)
   set_fact:
     mapi_uri: "{{ mapi_uri.stdout }}"
 

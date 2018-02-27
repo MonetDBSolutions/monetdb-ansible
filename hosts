@@ -1,0 +1,24 @@
+# -*- mode: conf; -*-
+
+[all:vars]
+#download_dir = "{{ ansible_env.HOME }}/CACHE"
+#ansible_ssh_pipelining=True
+#rsync_location = rsync://toulouse.da.cwi.nl:14215/exanest/
+
+rsync_location = rsync://192.168.1.63:14215/monetdb-data
+monetdb_src = "{{ ansible_env.HOME }}/MonetDB"
+hg_revision = Jul2017_SP4_release
+
+monetdb_prefix = /usr
+#build_dir = "{{ monetdb_prefix }}/BUILD"
+#monetdb_farm_dir = /xtra/mdbs/FARM
+
+atraf_group = atraf
+atraf_subset = 3mo
+
+[monetdb_source]
+
+[atraf]
+trenzvm0 atraf_master=true 
+#trenzvm1
+#trenzvm2
