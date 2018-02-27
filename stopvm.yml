@@ -22,3 +22,15 @@
     become: true
     command: ip link delete {{item}}
     with_items: "{{taps_result.stdout_lines}}"
+
+- hosts: rsyncd
+  tasks:
+  - name: Check if rsyncd is running
+    stat:
+      path: "{{ ansible_env.HOME}}/rsyncd.pid"
+    register: stat_result
+
+  - name: stop rsyncd
+    when: stat_result.stat.exists
+    command: "pkill -F {{ ansible_env.HOME}}/rsyncd.pid"
+
