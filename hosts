@@ -9,7 +9,7 @@ rsync_location = rsync://192.168.1.63:14215/monetdb-data
 monetdb_prefix = /usr
 
 atraf_group = atraf
-atraf_subset = 12mo
+atraf_subset = 3mo
 atraf_db = "{{ atraf_subset }}_{{ groups[atraf_group] | length }}x"
 mapi_uri="mapi:monetdb://{{ vm_ip }}:50000/{{ atraf_db }}"
 
@@ -18,6 +18,9 @@ trenzvm0 atraf_master=true
 trenzvm1
 trenzvm2
 trenzvm3
+
+[rsyncd]
+trenz13
 
 [trenz_vms]
 trenzvm0 vm_host="trenz10" vm_nr="0" vm_ip="10.1.0.1"

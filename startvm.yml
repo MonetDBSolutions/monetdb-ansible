@@ -27,3 +27,15 @@
   tasks:
   - name: set the time
     shell: ntpdate pool.ntp.org
+
+- hosts: rsyncd
+  tasks:
+  - name: Check if rsyncd is running
+    stat:
+      path: "{{ ansible_env.HOME}}/rsyncd.pid"
+    register: stat_result
+
+  - name: start rsyncd
+    when: not stat_result.stat.exists
+    command: /usr/bin/rsync --daemon --config /mnt/eusrv64_shared/monetdb/rsyncd.conf
+
