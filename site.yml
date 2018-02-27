@@ -1,11 +1,6 @@
 ---
 
 - hosts: atraf
-  tasks:
-  - name: Set the time
-    shell: ntpdate pool.ntp.org
-
-- hosts: atraf
   roles:
   - private_farm
   - atraf_node
