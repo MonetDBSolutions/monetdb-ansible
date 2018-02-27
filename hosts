@@ -1,26 +1,24 @@
 # -*- mode: conf; -*-
 
 [all:vars]
-
-mdbs_dir = /xtra/mdbs
+mdbs_dir = /xtra/mdbs2
 download_dir = "{{ mdbs_dir }}/CACHE" 
 monetdb_farm_dir = {{ mdbs_dir }}/dbfarm
 rsync_location = rsync://192.168.1.63:14215/monetdb-data
 monetdb_prefix = /usr
-
 atraf_group = atraf
-atraf_subset = 3mo
 atraf_db = "{{ atraf_subset }}_{{ groups[atraf_group] | length }}x"
 mapi_uri="mapi:monetdb://{{ vm_ip }}:50000/{{ atraf_db }}"
 
+# Data set: 1mo / 3mo / 12mo / 13yr / all
+atraf_subset = 12mo
+
 [atraf]
-trenzvm0 atraf_master=true 
+# Nodes to run on
+trenzvm0 atraf_master=true     # master has no data
 trenzvm1
 trenzvm2
 trenzvm3
-
-[rsyncd]
-trenz13
 
 [trenz_vms]
 trenzvm0 vm_host="trenz10" vm_nr="0" vm_ip="10.1.0.1"
@@ -28,3 +26,5 @@ trenzvm1 vm_host="trenz11" vm_nr="1" vm_ip="10.2.0.1"
 trenzvm2 vm_host="trenz12" vm_nr="2" vm_ip="10.3.0.1"
 trenzvm3 vm_host="trenz13" vm_nr="3" vm_ip="10.4.0.1"
 
+[rsyncd]
+trenz13
