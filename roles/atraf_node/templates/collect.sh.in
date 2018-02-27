@@ -3,6 +3,8 @@
 DEST="$1"
 MCLIENT="$(cd "$HOME"; cd "{{monetdb_prefix }}/bin"; pwd)/mclient"
 
+ATRAF_DB="${ATRAF_DB:-{{atraf_db}}}"
+
 die() {
 	echo ":( $*"
 	exit 1
@@ -25,7 +27,7 @@ to() {
 	dst="$DEST/$1.csv"
 	shift
 	>&2 echo ":: $dst"
-	"$MCLIENT" -d atraf -f csv "$@" | tee "$dst"
+	"$MCLIENT" -d "$ATRAF_DB" -f csv "$@" | tee "$dst"
 }
 
 to rowcount -s 'select "Year" as "year", "Month" as "month", actual as rowcount from atraf.missing_rows order by "year", "month"'

@@ -11,14 +11,17 @@ hg_revision = Jul2017_SP4_release
 
 monetdb_prefix = /usr
 #build_dir = "{{ monetdb_prefix }}/BUILD"
-#monetdb_farm_dir = /xtra/mdbs/FARM
+monetdb_farm_dir = /xtra/mdbs/dbfarm
 
 atraf_group = atraf
-atraf_subset = 3mo
+atraf_subset = 12mo
+
+# unnecessary 
+atraf_db = "{{ atraf_subset }}_{{ groups[atraf_group] | length }}x"
 
 [monetdb_source]
 
 [atraf]
-trenzvm0 atraf_master=true 
-#trenzvm1
-#trenzvm2
+trenzvm0 atraf_master=true mapi_uri="mapi:monetdb://10.1.0.1:50000/{{ atraf_db }}"
+trenzvm1 mapi_uri="mapi:monetdb://10.2.0.1:50000/{{ atraf_db }}"
+trenzvm2 mapi_uri="mapi:monetdb://10.3.0.1:50000/{{ atraf_db }}"

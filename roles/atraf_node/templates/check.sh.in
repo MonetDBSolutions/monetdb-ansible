@@ -3,6 +3,8 @@
 REF="${1:-answers}"
 MCLIENT="$(cd "$HOME"; cd "{{monetdb_prefix }}/bin"; pwd)/mclient"
 
+ATRAF_DB="${ATRAF_DB:-{{atraf_db}}}"
+
 die() {
 	>&2 echo ":( $*"
 	exit 1
@@ -16,7 +18,7 @@ check() {
 	dst="output.$1.csv"
 	shift
 	>&2 echo ":: $test"
-	"$MCLIENT" -d atraf -f csv "$@" > "$dst" || die "Mclient failed"
+	"$MCLIENT" -d "$ATRAF_DB" -f csv "$@" > "$dst" || die "Mclient failed"
 	cmp "$ref" "$dst" || die "Output differs: diff \"$ref\" \"$dst\""
 	rm "$dst"
 }

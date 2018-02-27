@@ -1,22 +1,11 @@
 ---
 
-# Example Ansible playbook for setting up the MonetDB benchmarks.
+- hosts: atraf
+  tasks:
+  - name: Set the time
+    shell: ntpdate pool.ntp.org
 
-# Install MonetDB from source
-#- hosts: atraf
-  #roles:
-#  - build_dependencies
-  #- monetdb_checkout
-  #- build_monetdb
-  #- private_farm
-
-# Install MonetDB from RPM, and TPC-H
-#- hosts: tpc_h
-  #roles:
-  #- tpch_node
-
-# Install MonetDB from source, and the Air Traffic benchmark
-# (We haven't packaged the latest MonetDB for exanest yet)
 - hosts: atraf
   roles:
+  - private_farm
   - atraf_node

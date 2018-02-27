@@ -19,14 +19,14 @@
 
 - name: Get database details
   shell: "{{ monetdb_prefix }}/bin/monetdb status -l {{ atraf_db }} | sed -n -e 's/  connection uri: //p'"
-  register: mapi_uri
-  failed_when: not mapi_uri.stdout
+  register: mapi_uri_result
+  failed_when: not mapi_uri_result.stdout
   changed_when: False
 
 - name: Figure out mapi uri
   when: not (mapi_uri is defined)
   set_fact:
-    mapi_uri: "{{ mapi_uri.stdout }}"
+    mapi_uri: "{{ mapi_uri_result.stdout }}"
 
 - name: Partition the data
   set_fact:

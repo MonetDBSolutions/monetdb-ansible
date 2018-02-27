@@ -2,11 +2,5 @@
   tasks:
 
   - name: killall
-    command: killall -9 mserver5 monetdbd
+    command: killall -9 mserver5 monetdbd qemu-system-aarch64
     failed_when: False
-
-  - name: rm
-    file:
-      path: "{{ monetdb_farm_dir }}"
-      state: absent
-    
