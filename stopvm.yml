@@ -1,0 +1,24 @@
+---
+
+- hosts: trenz_vms
+  gather_facts: no
+  tasks:
+  - name: "Kill all VM's"
+    delegate_to: "{{vm_host}}"
+    become: true
+    command: killall qemu-system-aarch64
+    register: kill_result
+    failed_when: kill_result.rc != 0 and not "no process found" in kill_result.stderr
+    changed_when: kill_result.rc == 0
+
+  - name: Find unlinked taps
+    delegate_to: "{{vm_host}}"
+    shell: "ip link show | sed -n -e 's/.* \\(tap[0-9][0-9]*\\):.*state DOWN.*/\\1/p'"
+    register: taps_result
+    changed_when: False
+
+  - name: Delete unlinked taps
+    delegate_to: "{{vm_host}}"
+    become: true
+    command: ip link delete {{item}}
+    with_items: "{{taps_result.stdout_lines}}"

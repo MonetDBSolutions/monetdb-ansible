@@ -1,27 +1,27 @@
 # -*- mode: conf; -*-
 
 [all:vars]
-#download_dir = "{{ ansible_env.HOME }}/CACHE"
-#ansible_ssh_pipelining=True
-#rsync_location = rsync://toulouse.da.cwi.nl:14215/exanest/
 
+mdbs_dir = /xtra/mdbs
+download_dir = "{{ mdbs_dir }}/CACHE" 
+monetdb_farm_dir = {{ mdbs_dir }}/dbfarm
 rsync_location = rsync://192.168.1.63:14215/monetdb-data
-monetdb_src = "{{ ansible_env.HOME }}/MonetDB"
-hg_revision = Jul2017_SP4_release
-
 monetdb_prefix = /usr
-#build_dir = "{{ monetdb_prefix }}/BUILD"
-monetdb_farm_dir = /xtra/mdbs/dbfarm
 
 atraf_group = atraf
 atraf_subset = 12mo
-
-# unnecessary 
 atraf_db = "{{ atraf_subset }}_{{ groups[atraf_group] | length }}x"
-
-[monetdb_source]
+mapi_uri="mapi:monetdb://{{ vm_ip }}:50000/{{ atraf_db }}"
 
 [atraf]
-trenzvm0 atraf_master=true mapi_uri="mapi:monetdb://10.1.0.1:50000/{{ atraf_db }}"
-trenzvm1 mapi_uri="mapi:monetdb://10.2.0.1:50000/{{ atraf_db }}"
-trenzvm2 mapi_uri="mapi:monetdb://10.3.0.1:50000/{{ atraf_db }}"
+trenzvm0 atraf_master=true 
+trenzvm1
+trenzvm2
+trenzvm3
+
+[trenz_vms]
+trenzvm0 vm_host="trenz10" vm_nr="0" vm_ip="10.1.0.1"
+trenzvm1 vm_host="trenz11" vm_nr="1" vm_ip="10.2.0.1"
+trenzvm2 vm_host="trenz12" vm_nr="2" vm_ip="10.3.0.1"
+trenzvm3 vm_host="trenz13" vm_nr="3" vm_ip="10.4.0.1"
+

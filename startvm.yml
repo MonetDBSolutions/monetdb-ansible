@@ -1,0 +1,29 @@
+---
+
+- hosts: trenz_vms
+  gather_facts: no
+  tasks:
+  - name: Check if the IP is already routable
+    delegate_to: "{{vm_host}}"
+    shell: "/sbin/route | grep '^{{vm_ip}}[^0-9].*tap[0-9]*$'"
+    register: route_result
+    changed_when: False
+    failed_when: False
+
+  - name: Start the VM
+    when: route_result.rc != 0
+    delegate_to: "{{vm_host}}"
+    become: true
+    command: "/mnt/eusrv64_shared/monetdb/centos7vm/vm_launch_script_big {{vm_nr}} {{vm_ip}} daemon"
+
+  - name: "Wait for the VM's ssh server to come up"
+    delegate_to: "{{vm_host}}"
+    wait_for:
+      host: "{{vm_ip}}"
+      port: 22
+      search_regex: OpenSSH
+
+- hosts: trenz_vms
+  tasks:
+  - name: set the time
+    shell: ntpdate pool.ntp.org
